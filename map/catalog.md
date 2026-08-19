@@ -11,22 +11,37 @@ order; it is the real spine of the territory.
 Four words in this territory mean three things each. Read
 `../cartographer/reference/collisions.md` before trusting any row.
 
+**Lineage matters here.** `operator/` is the original specification build.
+The root JS files are a later standalone site. Where they disagree, the
+running code wins and the spec is stale. See `cards/operator-folder.md`.
+
 ---
 
 ## 1 — LABELS · model-labeled
 
 | Noun | What it is | State | Card |
 |---|---|---|---|
-| systemPrompt | the real labeling instructions | live | cards/system-prompt.md |
+| systemPrompt | the labeling instructions that run | live | cards/system-prompt.md |
 | jdItems | job posting broken into line-items | live | cards/jd-items.md |
 | strengths | candidate strengths, mapped or not | live | cards/strengths.md |
 | tier | required vs preferred | live | cards/tier.md |
 | centrality | core / supporting / peripheral | live | cards/centrality.md |
 | status | meets / partial / missing | live | cards/status.md |
 | obtainable | acquirable, not disqualifying | live | cards/obtainable.md |
-| operator/ | rules the app cannot read | ghost | cards/operator-folder.md |
+| mapsToNeed | whether a strength answers a real need | live | cards/maps-to-need.md |
 
-## 2 — MATH · computed
+## 2 — LEDGER · human-in-the-loop
+
+| Noun | What it is | State | Card |
+|---|---|---|---|
+| Evidence Ledger | the audit stage between labels and math | live | cards/evidence-ledger.md |
+| RUN.ledger | per-run label state and cache | live | cards/run-ledger.md |
+| consensus | agreement across label readings | live | cards/consensus.md |
+| ledger controls | dropdowns the operator edits | live | cards/ledger-controls.md |
+| OPERATOR chip | marks a label a human overrode | live | cards/operator-chip.md |
+| demo mode ledger | hidden — demo has no ledger | live | cards/demo-mode-ledger.md |
+
+## 3 — MATH · computed
 
 | Noun | What it is | State | Card |
 |---|---|---|---|
@@ -35,11 +50,11 @@ Four words in this territory mean three things each. Read
 | TIER_W | weight, required vs preferred | live | cards/tier-w.md |
 | CENT_W | weight, how central an item is | live | cards/cent-w.md |
 | STATUS_F | weight, what a gap costs | live | cards/status-f.md |
-| EDGE_BONUS | points added for a strong strength | live | cards/edge-bonus.md |
+| EDGE_BONUS | points added for the best strength | live | cards/edge-bonus.md |
 | TIE_FACTOR | dominance threshold for edge vs gap | live | cards/tie-factor.md |
 | edgeVsGap | edge / gap / balanced | live | cards/edge-vs-gap.md |
 
-## 3 — GUARDS · computed
+## 4 — GUARDS · computed
 
 | Noun | What it is | State | Card |
 |---|---|---|---|
@@ -47,9 +62,9 @@ Four words in this territory mean three things each. Read
 | CAP_VALUE | ceiling when required items unmet | live | cards/cap-value.md |
 | GATE_CORE_CEIL | ceiling when a core gate is live | live | cards/gate-core-ceil.md |
 | confidence floor | clamp when inputs are thin | live | cards/confidence-floor.md |
-| Guard 2 | numbered but never written | ghost | cards/guard-two.md |
+| guard numbering | code and spec number them differently | drift | cards/guard-numbering.md |
 
-## 4 — VERDICT · computed
+## 5 — VERDICT · computed
 
 | Noun | What it is | State | Card |
 |---|---|---|---|
@@ -61,11 +76,19 @@ Four words in this territory mean three things each. Read
 | divergent | computed, never read | ghost | cards/divergent.md |
 | benchmark evaluator | filtered out, never exists | ghost | cards/benchmark-evaluator.md |
 
-## 5 — DISPLAY
+## 6 — DISPLAY
 
 | Noun | What it is | State | Card |
 |---|---|---|---|
 | render | draws everything | live | cards/render.md |
-| Evidence Ledger | shows the math in the open | live | cards/evidence-ledger.md |
+| Score Receipt | shows the math, with stale numbers | live | cards/score-receipt.md |
 | DEMO_DATA | sample labels, real math | live | cards/demo-data.md |
-| report-template.md | nothing points at it | leftover | cards/report-template.md |
+| section reveal | which sections appear when | live | cards/section-reveal.md |
+
+## 0 — THE SPEC FOLDER · not read by the running system
+
+| Noun | What it is | State | Card |
+|---|---|---|---|
+| operator/ | the original spec, still accurate | leftover | cards/operator-folder.md |
+| scoring-rubric.md | a spec generation older than the code | ghost | cards/scoring-rubric-file.md |
+| report-template.md | output format nothing consumes | leftover | cards/report-template.md |
