@@ -30,16 +30,13 @@ running code wins and the spec is stale. See `cards/operator-folder.md`.
 | obtainable | acquirable, not disqualifying | live | cards/obtainable.md |
 | mapsToNeed | whether a strength answers a real need | live | cards/maps-to-need.md |
 
-## 2 — LEDGER · human-in-the-loop
+## 2 — LEDGER · removed 2026-07-14
 
 | Noun | What it is | State | Card |
 |---|---|---|---|
-| Evidence Ledger | the audit stage between labels and math | live | cards/evidence-ledger.md |
-| RUN.ledger | per-run label state and cache | live | cards/run-ledger.md |
-| consensus | agreement across label readings | live | cards/consensus.md |
-| ledger controls | dropdowns the operator edits | live | cards/ledger-controls.md |
-| OPERATOR chip | marks a label a human overrode | live | cards/operator-chip.md |
-| demo mode ledger | hidden — demo has no ledger | live | cards/demo-mode-ledger.md |
+| Evidence Ledger | built July, removed July, display left | ghost | cards/evidence-ledger.md |
+| ledger state layer | four names, no declarations | ghost | cards/ledger-state-layer.md |
+
 
 ## 3 — MATH · computed
 
@@ -84,6 +81,7 @@ running code wins and the spec is stale. See `cards/operator-folder.md`.
 | Score Receipt | shows the math, with stale numbers | live | cards/score-receipt.md |
 | DEMO_DATA | sample labels, real math | live | cards/demo-data.md |
 | section reveal | which sections appear when | live | cards/section-reveal.md |
+
 
 ## 0 — THE SPEC FOLDER · not read by the running system
 
