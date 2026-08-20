@@ -72,6 +72,7 @@ running code wins and the spec is stale. See `cards/operator-folder.md`.
 | committeeNote | plain statement of the split | live | cards/committee-note.md |
 | divergent | computed, never read | ghost | cards/divergent.md |
 | benchmark evaluator | filtered out, never exists | ghost | cards/benchmark-evaluator.md |
+| evaluator vote threshold | 55, unnamed, duplicated in two files | drift | cards/vote-threshold.md |
 
 ## 6 — DISPLAY
 

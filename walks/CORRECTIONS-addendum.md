@@ -91,6 +91,96 @@ learns a different system.
 
 ---
 
+## C10 — "the math owns the number" — TRUE, BUT NOT WHERE I SAID
+
+**Claim, running through the whole Math group:** `computeScore` is what makes
+the score honest.
+
+`computeScore` (`scoring.js:124–215`) mutates nothing. It receives labels,
+returns an object, and walks away. The model still emits its own
+`survivabilityScore`, `verdict`, and `recommendation` — the schema at
+`scoring.js:302` requires them, and they arrive in every response.
+
+**Search that located the actual guarantee:**
+```
+grep -n "survivabilityScore" scoring.js app.js
+→ scoring.js:302  — the schema asking the model for one
+→ scoring.js:346  — the overwrite
+→ app.js:54       — DEMO_DATA ships 68
+→ app.js:71       — the overwrite
+```
+
+Five lines in the real-run caller, `scoring.js:346–350`:
+
+```js
+parsedData.survivabilityScore = _b.score;
+parsedData.recommendation     = _b.recommendation;
+parsedData.verdict            = _b.verdict;
+if (_b.lowConfidence) parsedData.confidenceLevel = "low";
+parsedData._brain             = _b;
+```
+
+Four more doing the same in `app.js:71–74`, minus the confidence line.
+
+Remove them and the tool displays model-generated numbers. No error. No visual
+difference. The Score Receipt would not lie — it would disappear, because
+`render.js:189–190` returns early when `_brain` is absent.
+
+**Correct statement:** the scorer is not the guarantee. The wiring is, and it
+lives outside the scoring brain, in two files, duplicated, with nothing
+asserting it.
+
+---
+
+## C11 — "Mode 2 doesn't reach the computed output" — WRONG
+
+**First claim:** the two-mode split in `systemPrompt` keeps the cynical
+adversarial voice entirely out of anything computed.
+
+The prompt says Mode 1 "drives the computed survivability score"
+(`scoring.js:224`). That sentence is exactly true. I read it as broader than it
+is written.
+
+Nothing from Mode 2 reaches `scoring.js:128–169`. The score is clean.
+
+But the evaluator **scores** are Mode 2 output — produced alongside the
+objections and gut takes, under the cynical instruction at `scoring.js:226`.
+Both call sites convert them to votes before `computeScore` ever runs:
+
+```
+grep -n 'lean: (e.score' scoring.js app.js
+→ scoring.js:344
+→ app.js:69
+```
+
+```js
+lean: (e.score ?? 50) >= 55 ? "apply" : "skip"
+```
+
+That vote is read at `scoring.js:184` and `:186`.
+
+| Score band | What the vote can do |
+|---|---|
+| ≥ 55 | `Apply` → `Apply with Caution` |
+| 45–54 | `Apply with Caution` → `Do Not Apply` |
+| < 45 | nothing — already `Do Not Apply` |
+
+The `internal` evaluator is instructed toward skepticism at `scoring.js:231`
+("territory defense, status quo preservation… Skeptical of external hires").
+It scores 43 in the shipped demo. A persona written to be harsh casts a
+structural skip vote, and that is one of three.
+
+**Correct statement:** Mode 2 cannot touch the score. It can change the
+recommendation.
+
+**Note:** the `55` in that line is not `TIE_FACTOR`-style tunable. It is a bare
+literal, duplicated across two files, outside the constants block, and it means
+something different from the `55` at `scoring.js:177` and `:183` — this one is
+one evaluator's rating, that one is the candidate's whole score. Same number,
+two meanings, no name. See `cards/vote-threshold.md`.
+
+---
+
 ## Method note
 
 Every correction in this log came from the same discipline: the rules
