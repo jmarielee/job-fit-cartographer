@@ -3,7 +3,7 @@
 **Type:** object
 **State:** live · model-labeled
 **Stage:** labels
-**Source:** rule at `scoring.js:260`; weighted by `TIER_W`, `scoring.js:31`
+**Source:** rule at `scoring.js:260`; weighted by `TIER_W`, `scoring.js:32`
 
 ---
 

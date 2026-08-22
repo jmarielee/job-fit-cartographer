@@ -63,5 +63,5 @@ candidate the full 1.0. Compare `STATUS_F`, whose fallback runs the other way.
 ### Receipt drift
 
 None of these weights is printed anywhere. The receipt shows `G` (`render.js:225`)
-and the base formula (`:227`) — the product, never the factors. Change this
+and the base formula (`render.js:227`) — the product, never the factors. Change this
 table and every number on the receipt moves with no visible cause.

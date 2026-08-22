@@ -3,7 +3,7 @@
 **Type:** threshold
 **State:** live
 **Stage:** 5 — VERDICT
-**Source:** `scoring.js:175–179` (the bands), `:213` (returned); displayed at `render.js:256` (hero) and, in the removed ledger, `:647`
+**Source:** `scoring.js:175–179` (the bands), `:213` (returned); displayed at `render.js:256` (hero) and, in the removed ledger, `render.js:647`
 
 ## What it is
 
