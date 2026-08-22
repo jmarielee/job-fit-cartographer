@@ -45,12 +45,14 @@ should say so.
 
 ## How to walk it
 
-1. Read `map/catalog.md`. Rows are grouped by decision order — labels, math,
-   guards, verdict, display — not by folder. The folder tree does not show
-   that order.
+1. Read `map/catalog.md`. Rows are grouped by decision order — labels,
+   ledger, math, guards, verdict, display — not by folder. The folder tree
+   does not show that order. The ledger stage is empty: it was built and
+   removed in July, and the catalog keeps its aisle so the ghosts sit where
+   the thing would be working.
 2. Read `cartographer/reference/collisions.md`. Five words in this territory
-   mean three different things each. Skipping this file is how readers land
-   on the wrong card confidently.
+   carry more than one meaning. Skipping this file is how readers land on
+   the wrong card confidently.
 3. Open one card.
 4. Stop.
 
