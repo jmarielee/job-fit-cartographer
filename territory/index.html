@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.anthropic.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+<title>Adversarial Brief — Will You Actually Get This Job?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <p class="header-eyebrow">Job Fit Report // Honest Assessment</p>
+    <h1>Will you <em class="scrawl">actually<svg class="scrawl-circle" viewBox="0 0 220 80" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M191.9,17.5 C193.9,18.4 200.8,20.8 203.7,23.1 C206.5,25.3 209.5,28.2 209.1,31.1 C208.7,34.0 204.4,37.5 201.1,40.7 C197.8,43.8 194.1,46.9 189.4,49.8 C184.7,52.7 178.9,55.4 173.0,58.1 C167.0,60.8 160.7,63.4 153.7,65.9 C146.8,68.3 139.3,71.6 131.2,73.0 C123.1,74.4 113.6,74.3 105.0,74.3 C96.4,74.3 87.5,74.1 79.5,73.2 C71.5,72.3 64.3,70.4 56.9,69.0 C49.6,67.7 42.2,66.7 35.5,65.2 C28.7,63.8 21.4,62.3 16.3,60.3 C11.3,58.2 6.4,55.5 4.9,52.9 C3.5,50.2 5.9,47.1 7.9,44.5 C9.9,41.9 13.1,39.6 16.7,37.2 C20.4,34.8 24.5,32.5 29.9,30.0 C35.3,27.5 41.3,24.4 48.9,22.2 C56.5,19.9 66.1,17.9 75.5,16.4 C84.9,15.0 95.4,14.3 105.2,13.7 C114.9,13.0 125.1,12.2 133.9,12.4 C142.7,12.5 150.1,14.4 158.1,14.8 C166.0,15.1 175.0,13.8 181.6,14.5 C188.1,15.1 193.6,16.8 197.5,18.6 C201.4,20.4 204.1,22.8 205.0,25.2 C205.9,27.7 204.5,30.6 202.9,33.3 C201.2,36.0 198.0,38.6 195.0,41.4 C192.0,44.2 189.4,47.3 185.0,50.1 C180.6,52.8 174.5,55.4 168.5,58.1 C162.4,60.7 156.2,64.0 148.9,65.9 C141.5,67.8 132.7,69.1 124.5,69.6 C116.4,70.2 108.0,69.5 100.0,69.4 C92.1,69.3 84.2,69.3 76.7,68.8 C69.1,68.3 61.8,67.4 54.8,66.4 C47.8,65.5 40.4,64.5 34.8,62.9 C29.2,61.3 24.5,58.9 21.4,56.8 C18.2,54.6 16.8,50.9 15.9,49.7" fill="none" stroke="#c8410a" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg></em><br>get this job?</h1>
+    <p class="header-sub">Paste the job description and your resume. Get an honest, unfiltered breakdown of your real chances — where you're strong, where you'll get cut, and exactly what to fix before you apply.</p>
+  </div>
+
+  <!-- STAGE 1: RAW INGEST -->
+  <div id="stage-input">
+    <!-- ACCESS KEY TERMINAL GATE -->
+    <div class="access-gate" id="accessGate">
+      <div class="access-gate-header">
+        <span class="access-gate-title">
+          <span class="access-status-indicator" id="accessIndicator"></span>
+          BYOK — Anthropic API Key
+        </span>
+        <span class="trust-note" style="margin:0" id="accessStatusLabel">No key saved</span>
+      </div>
+      <p class="access-gate-desc">Your key stays in your browser only. Get one free from <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">Anthropic Console</a>.</p>
+      <div class="access-input-wrap">
+        <input type="password" class="access-input" id="apiKeyInput" placeholder="sk-ant-…">
+        <button class="btn-access-save" id="saveKeyBtn">Save Key</button>
+      </div>
+      <div class="demo-row">
+        <button class="btn-demo" id="demoBtn">▶ Load Demo</button>
+        <span class="access-mode-chip mode-none" id="modechip">No Key</span>
+        <span class="demo-hint">See full analysis sample</span>
+      </div>
+    </div>
+
+    <p class="trust-note">Your inputs stay in your browser — nothing is stored or shared</p>
+    <div class="intake">
+      <div class="intake-card">
+        <label>The Job Description</label>
+        <textarea id="jdInput" placeholder="Paste the full job posting here…"></textarea>
+      </div>
+      <div class="intake-card">
+        <label>Your Resume</label>
+        <textarea id="resumeInput" placeholder="Paste your resume or experience here…"></textarea>
+      </div>
+    </div>
+
+    <div class="run-row">
+      <button class="btn-run" id="runBtn">
+        <div class="spinner"></div>
+        <span class="btn-label">Run the Analysis</span>
+      </button>
+      <span class="run-hint">Takes about 40–60 seconds</span>
+    </div>
+
+    <div id="errorBox"><div class="error-inner" id="errorText"></div></div>
+  </div>
+
+  <!-- STAGE 2: PROCESS SCANNING -->
+  <div id="stage-loading">
+    <div class="loading-screen">
+      <div class="loading-ring-wrap">
+        <canvas id="loadingCanvas" width="180" height="180"></canvas>
+        <div class="loading-ring-center">
+          <span class="loading-percent" id="loadingPercent">0%</span>
+          <span class="loading-label">Analyzing Gaps</span>
+        </div>
+      </div>
+      <p class="loading-status" id="loadingStatus">Reading the job description…</p>
+    </div>
+  </div>
+
+  <!-- STAGE 3: INTERCEPT DOSSIER -->
+  <div id="stage-result">
+    <div class="stage-result-nav">
+      <button class="btn-reset" id="resetBtn">← Run a New Analysis</button>
+    </div>
+
+    <div id="results">
+
+      <!-- RAW SCORE METRICS -->
+      <div class="result-section" id="section-hero">
+        <p class="trust-note">Your Job Fit Report</p>
+        <div class="score-hero" id="scoreHero">
+          <div class="score-ring-outer">
+            <svg class="score-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <circle class="score-track" cx="60" cy="60" r="55"/>
+              <circle class="score-arc" id="scoreArc" cx="60" cy="60" r="55"/>
+              <text class="score-svg-num" id="scoreNum" x="60" y="56" text-anchor="middle" dominant-baseline="middle">—</text>
+              <text class="score-svg-sub" x="60" y="78" text-anchor="middle">YOUR ODDS</text>
+            </svg>
+          </div>
+          <div class="score-meta">
+            <div class="score-rec-badge" id="scoreRecBadge"><span class="score-badge-dot"></span><span id="scoreRecText">—</span></div>
+            <div class="score-verdict" id="scoreVerdict">—</div>
+            <div class="score-angle-label">Your Best Angle Into This Role</div>
+            <div class="score-angle" id="scoreAngle"></div>
+            <div class="meta-chips" id="scoreMetaChips"></div>
+            <div class="score-meta-grid">
+              <div class="score-meta-item">
+                <span class="score-meta-label">The One Thing Working In Your Favor</span>
+                <span class="score-meta-text" id="scoreHook"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gate-flag" id="gateFlag" style="display:none">
+          <div class="gate-flag-label"><span class="gate-flag-icon">⚠</span> The Gate — clear this or you don't get read</div>
+          <div class="gate-flag-text" id="gateFlagText"></div>
+          <div class="gate-flag-note" id="gateFlagNote"></div>
+        </div>
+
+        <div class="bestpath-card" id="bestPathCard" style="display:none">
+          <div class="bestpath-label">Your Best Way In</div>
+          <div class="bestpath-path" id="bestPathPath"></div>
+          <div class="bestpath-reason" id="bestPathReason"></div>
+          <div class="bestpath-move-label">Do This First</div>
+          <div class="bestpath-move" id="bestPathFirstMove"></div>
+        </div>
+
+        <div class="opener-card" id="openerCard" style="display:none">
+          <div class="opener-head">
+            <div class="opener-label">Your Drafted Opener — paste, tweak, send</div>
+            <button class="btn-opener-copy" id="openerCopyBtn">Copy</button>
+          </div>
+          <div class="opener-body" id="openerBody"></div>
+        </div>
+      </div>
+
+      <!-- THE EVIDENCE LEDGER — the labels the math scored, auditable and editable -->
+      <div class="result-section" id="section-ledger" style="display:none">
+        <div class="section-label">
+          <span class="section-chip">⬡</span>
+          <span class="section-title">The Evidence Ledger — exactly what the math scored</span>
+        </div>
+        <div class="ledger-wrap">
+          <div class="ledger-scorebar" id="ledgerScorebar">
+            <div class="scorebar-main">
+              <span class="ledger-score-num" id="ledgerScoreNum">—</span>
+              <span class="ledger-score-verdict" id="ledgerScoreVerdict">—</span>
+            </div>
+            <span class="ledger-score-note" id="ledgerScoreNote"></span>
+          </div>
+          <div class="ledger-cache-note" id="ledgerCacheNote" style="display:none"></div>
+          <div class="ledger-grid-label">Requirements — extracted from the job description</div>
+          <div id="ledgerItems"></div>
+          <div class="ledger-grid-label">Strengths — mapped from your resume</div>
+          <div id="ledgerStrengths"></div>
+          <div class="ledger-actions">
+            <button class="btn-demo" id="rewriteReportBtn" style="display:none">↻ Rewrite report with edited labels</button>
+          
+          </div>
+          <p class="ledger-footnote">Three independent readings labeled this evidence; the majority decided each label. Edit any label — the score recomputes instantly in code. Same ledger, same number — every time.</p>
+        </div>
+      </div>
+
+      <!-- COMMITTEE READ -->
+      <div class="result-section" id="section-committee-read" style="display:none">
+        <div class="section-label">
+          <span class="section-chip">⬡</span>
+          <span class="section-title">The Read Across the Room</span>
+        </div>
+        <div class="committee-read-body">
+          <p class="committee-read-text" id="committeeReadText"></p>
+          <div class="committee-tally" id="committeeTally"></div>
+        </div>
+      </div>
+
+      <!-- CALIBRATION COMPARISON -->
+      <div class="result-section" id="section-benchmark" style="display:none">
+        <div class="section-label">
+          <span class="section-chip">01</span>
+          <span class="section-title">Who You're Actually Competing Against</span>
+        </div>
+        <p class="bench-intro">This is the typical candidate who gets the job. Here's how you stack up.</p>
+        <div class="bench-card">
+          <div>
+            <div class="bench-title" id="benchTitle"></div>
+            <div class="bench-summary" id="benchSummary" style="margin-top:0.5rem"></div>
+          </div>
+          <div class="bench-gauge" id="benchGauge">
+            <div class="bench-gauge-head">
+              <span class="bench-gauge-you" id="benchGaugeYou">YOU — </span>
+              <span class="bench-gauge-gap" id="benchGaugeGap"></span>
+            </div>
+            <div class="bench-gauge-track">
+              <div class="bench-gauge-fill" id="benchGaugeFill"></div>
+              <div class="bench-gauge-marker" id="benchGaugeMarker">
+                <span class="bench-gauge-marker-tag" id="benchGaugeMarkerTag">THE BAR · 75</span>
+              </div>
+            </div>
+            <div class="bench-gauge-note" id="benchGaugeNote" style="display:none"></div>
+          </div>
+          <div class="bench-compare">
+            <div class="bench-col compete">
+              <div class="bench-col-label">Where You Can Compete</div>
+              <div id="benchCompete"></div>
+            </div>
+            <div class="bench-col lag">
+              <div class="bench-col-label">The Gap You Need to Close</div>
+              <div id="benchLag"></div>
+            </div>
+          </div>
+          <div>
+            <div class="bench-block-label">What Winning Candidates Usually Have</div>
+            <div id="benchSignals"></div>
+          </div>
+          <div>
+            <div class="bench-block-label">The Honest Market Reality</div>
+            <div class="bench-reality-text" id="benchReality"></div>
+          </div>
+          <div class="bench-upgrade">
+            <div class="bench-upgrade-label">The Fastest Thing You Can Do To Improve Your Odds</div>
+            <div class="bench-upgrade-text" id="benchUpgrade"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TARGET SPECIFIC REALITIES -->
+      <div class="result-section" id="section-company" style="display:none">
+        <div class="section-label">
+          <span class="section-chip">02</span>
+          <span class="section-title">About This Company</span>
+        </div>
+        <div class="company-card" id="companyCard">
+          <div class="company-read" id="companyRead"></div>
+          <div class="company-cols">
+            <div>
+              <div class="company-col-label">Hiring Process Red Flags</div>
+              <div class="company-risk" id="companyRisk"></div>
+            </div>
+            <div>
+              <div class="company-col-label">Things To Watch Out For</div>
+              <div class="company-watchfor" id="companyWatchFor"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STRATEGIC ANALYSIS -->
+      <div class="result-section" id="section01">
+        <div class="section-label">
+          <span class="section-chip">03</span>
+          <span class="section-title">Your Strengths vs. Your Weak Spots</span>
+        </div>
+        <div class="brief-cols">
+          <div class="brief-col cred">
+            <div class="brief-col-head">What's Working For You</div>
+            <div class="brief-bullets" id="credBullets"></div>
+          </div>
+          <div class="brief-col risk">
+            <div class="brief-col-head">What Could Get You Rejected</div>
+            <div class="brief-bullets" id="riskBullets"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIGNAL DEFICITS -->
+      <div class="result-section" id="section-signals" style="display:none">
+        <div class="section-label">
+          <span class="section-chip">04</span>
+          <span class="section-title">What's Missing From Your Story</span>
+        </div>
+        <div class="signals-list" id="signalDeficits"></div>
+      </div>
+
+      <!-- PIPELINE EXCLUSIONS -->
+      <div class="result-section" id="section02">
+        <div class="section-label">
+          <span class="section-chip">05</span>
+          <span class="section-title">The Stages to Prepare For</span>
+        </div>
+        <div class="risk-stages" id="riskStages"></div>
+      </div>
+
+      <!-- STRUCTURAL PROFILE SHAPE RISK -->
+      <div class="result-section" id="section-shaperisk" style="display:none">
+        <div class="shaperisk-card" id="shapeRiskCard">
+          <div class="shaperisk-header">
+            <div class="shaperisk-label">How Interviewers Are Reading You</div>
+            <div class="risk-pill" id="shapeRiskLevel"></div>
+          </div>
+          <div class="shaperisk-headline" id="shapeRiskHeadline"></div>
+          <div class="shaperisk-evidence" id="shapeRiskEvidence"></div>
+          <div class="shaperisk-fix-label">How To Change The Narrative</div>
+          <div class="shaperisk-fix" id="shapeRiskFix"></div>
+        </div>
+      </div>
+
+      <!-- INDIVIDUAL COMMITTEE PROFILE -->
+      <div class="result-section" id="section03">
+        <div class="section-label">
+          <span class="section-chip">06</span>
+          <span class="section-title">The People Deciding If You Get The Job</span>
+        </div>
+        <div class="eval-grid" id="evaluators"></div>
+      </div>
+
+      <!-- HIGHEST-LEVERAGE MITIGATION TACTICS -->
+      <div class="result-section" id="section-actions">
+        <div class="priority-block">
+          <div class="priority-header">
+            <div class="priority-icon">⚡</div>
+            <div>
+              <div class="priority-title">Fix These Before You Apply</div>
+              <div class="priority-sub">The highest-impact changes you can make right now to improve your chances.</div>
+            </div>
+          </div>
+          <div class="priority-actions" id="actions"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- scoring.js first: pure logic, no DOM deps -->
+<script src="scoring.js"></script>
+<!-- render.js second: DOM helpers, depends on nothing at parse time -->
+<script src="render.js"></script>
+<!-- app.js last: init + glue, calls into scoring and render at runtime -->
+<script src="app.js"></script>
+</body>
+</html>

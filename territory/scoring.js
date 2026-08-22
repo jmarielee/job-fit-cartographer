@@ -1,0 +1,373 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   scoring.js — Scoring brain, API call, system prompt, response parse
+   ─────────────────────────────────────────────────────────────────────── */
+
+/* ── FETCH WITH EXPONENTIAL BACKOFF ─────────────────────────────────────── */
+
+async function fetchWithBackoff(url, options, maxRetries = 5) {
+  let delay = 1000;
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetch(url, options);
+      if (response.ok) return response;
+      if (response.status >= 500 || response.status === 429) {
+        // Retry on 5xx or rate limits
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay *= 2;
+        continue;
+      }
+      return response;
+    } catch (err) {
+      if (i === maxRetries - 1) throw err;
+      await new Promise(resolve => setTimeout(resolve, delay));
+      delay *= 2;
+    }
+  }
+  throw new Error("Maximum retry threshold exceeded.");
+}
+
+/* ===== SCORING BRAIN — required/preferred + centrality + cap + floor =====
+   The model LABELS (jdItems / strengths); this computes the score.
+   Edit only the constants at the top to tune behaviour. ===== */
+const TIER_W   = { required: 1.0, preferred: 0.35 };
+const CENT_W   = { core: 1.0, supporting: 0.6, peripheral: 0.3 };
+const STATUS_F = { missing: 1.0, partial: 0.5, meets: 0.0 };
+const EDGE_BONUS    = { core: 12, supporting: 6, peripheral: 0, none: 0 };
+const REALISM_CEIL  = 90;   // the room is never a sure thing
+const CAP_VALUE     = 45;   // required-gate cap
+const GATE_CORE_CEIL = 74;  // a live CORE required gate can't read as "Strong Candidate" — capped into "Viable but Exposed"
+const TIE_FACTOR    = 1.3;  // edge-vs-gap dominance threshold
+
+function _itemWeight(it) {
+  const t = TIER_W[it.tier] != null ? TIER_W[it.tier] : TIER_W.required;
+  const c = CENT_W[it.centrality] != null ? CENT_W[it.centrality] : CENT_W.supporting;
+  return t * c;
+}
+function _computeGaps(jdItems) {
+  let G = 0, total = 0;
+  (jdItems || []).forEach(it => {
+    const w = _itemWeight(it);
+    total += w;
+    let sf = STATUS_F[it.status] != null ? STATUS_F[it.status] : 0;
+    // Obtainable items (trainable/eligibility) are capped at partial-weight even when labeled missing
+    if (it.obtainable && it.status === 'missing') sf = STATUS_F.partial;
+    G += w * sf;
+  });
+  return { G, total, gNorm: total > 0 ? G / total : 0 };
+}
+function _computeStrength(strengths) {
+  let S = 0, best = 'none';
+  const rank = { core: 3, supporting: 2, peripheral: 1, none: 0 };
+  (strengths || []).forEach(s => {
+    if (!s.mapsToNeed) return;
+    S += (CENT_W[s.centrality] != null ? CENT_W[s.centrality] : CENT_W.supporting);
+    if (rank[s.centrality] > rank[best]) best = s.centrality;
+  });
+  return { S, best };
+}
+function _requiredCoreMissing(jdItems) {
+  return (jdItems || []).filter(it =>
+    it.tier === 'required' &&
+    (it.centrality === 'core' || it.centrality === 'supporting') &&
+    it.status === 'missing' &&
+    !it.obtainable
+  ).length;
+}
+/* ── THE GATE ────────────────────────────────────────────────────────────
+   The single requirement most likely to end the application BEFORE a human
+   weighs the whole picture — a recruiter/ATS screen-out. This is a SECOND
+   deterministic signal alongside the score: the score measures overall match
+   strength; the gate measures the one blocking risk. Both come from the same
+   honest labels. A gate is REQUIRED only (a preferred gap is never a gate),
+   core/supporting, not obtainable, and not already met. partial counts —
+   "stated but not demonstrated" is exactly how candidates get screened out. */
+function _identifyGate(jdItems) {
+  const SEVERITY = { missing: 2, partial: 1 };
+  const candidates = (jdItems || []).filter(it =>
+    it.tier === 'required' &&
+    (it.centrality === 'core' || it.centrality === 'supporting') &&
+    (it.status === 'missing' || it.status === 'partial') &&
+    !it.obtainable
+  );
+  if (!candidates.length) return null;
+  // Rank: most severe status first, then most central, then by combined weight.
+  candidates.sort((a, b) => {
+    const sev = (SEVERITY[b.status] || 0) - (SEVERITY[a.status] || 0);
+    if (sev) return sev;
+    const cent = (CENT_W[b.centrality] || 0) - (CENT_W[a.centrality] || 0);
+    if (cent) return cent;
+    return _itemWeight(b) - _itemWeight(a);
+  });
+  const g = candidates[0];
+  return { text: g.text, status: g.status, centrality: g.centrality };
+}
+function _confidence(o) {
+  if ((o.jdItemCount || 0) < 3) return 'low';
+  if ((o.resumeLen || 0) < 200) return 'low';
+  if ((o.jdLen || 0) < 200)     return 'low';
+  return 'ok';
+}
+function _edgeVsGap(S, G) {
+  if (S > TIE_FACTOR * G) return 'edge';
+  if (G > TIE_FACTOR * S) return 'gap';
+  return 'balanced';
+}
+function _tallyVote(evaluators) {
+  let apply = 0, skip = 0;
+  (evaluators || []).forEach(e => {
+    const l = (e.lean || '').toLowerCase();
+    if (l.indexOf('skip') !== -1) skip++;
+    else if (l.indexOf('apply') !== -1) apply++;
+  });
+  return { apply, skip };
+}
+function computeScore(model) {
+  const gaps = _computeGaps(model.jdItems);
+  const str  = _computeStrength(model.strengths);
+
+  const base          = 100 * (1 - gaps.gNorm);
+  const bonus         = EDGE_BONUS[str.best] || 0;
+  const effectiveBonus = bonus * (1 - base / 100);
+  let score = Math.min(REALISM_CEIL, base + effectiveBonus);
+  score = Math.max(0, score);
+
+  // Guard 1 — required-gate cap (preferred items can NEVER trigger this)
+  const reqMiss = _requiredCoreMissing(model.jdItems);
+  let capped = false, capReason = '';
+  if (reqMiss >= 2) {
+    capped = true;
+    if (score > CAP_VALUE) score = CAP_VALUE;
+    capReason = reqMiss + ' core required qualifications unmet — score capped regardless of other strengths.';
+  }
+
+  // Guard 3 — confidence floor (thin inputs can't produce an extreme verdict)
+  const conf = _confidence({
+    jdItemCount: (model.jdItems || []).length,
+    resumeLen: model.resumeLen || 0,
+    jdLen: model.jdLen || 0,
+  });
+  let lowConfidence = false;
+  if (conf === 'low') { lowConfidence = true; score = Math.max(40, Math.min(65, score)); }
+
+  // THE GATE — the single unmet required item most likely to screen you out
+  // before a human weighs the whole picture. Identified BEFORE the verdict so a
+  // CORE gate can constrain the score, exactly like the required-gate cap and
+  // realism ceiling do. Math-owned, derived from the same honest labels.
+  // Rule: a live CORE required gate that is MISSING outright can't read as a
+  // "Strong Candidate" match — capped into "Viable but Exposed" until cleared.
+  // A partial core gate still surfaces as the deal-breaker and still blocks a
+  // clean "Apply" below, but doesn't clamp the number — partials already cost
+  // score in the base math. A supporting gate never caps. A gate NEVER rescues
+  // a weak score.
+  const gate = _identifyGate(model.jdItems);
+  let gateCapped = false;
+  if (gate && gate.centrality === 'core' && gate.status === 'missing' && score > GATE_CORE_CEIL) {
+    score = GATE_CORE_CEIL;
+    gateCapped = true;
+  }
+
+  score = Math.round(score);
+
+  const evg  = _edgeVsGap(str.S, gaps.G);
+  const vote = _tallyVote((model.evaluators || []).filter(e => e.id !== 'benchmark'));
+
+  // verdict follows score bands only — committee split is nuance, not a veto
+  let verdict;
+  if (score >= 75) verdict = 'Strong Candidate';
+  else if (score >= 55) verdict = 'Viable but Exposed';
+  else if (score >= 35) verdict = 'Long Shot';
+  else verdict = 'Do Not Apply';
+
+  // recommendation: score is the floor; committee split can add caution but cannot override a healthy score
+  let recommendation;
+  if (score >= 55) {
+    recommendation = (vote.apply >= 2 && evg === 'edge') ? 'Apply' : 'Apply with Caution';
+  } else if (score >= 45) {
+    recommendation = vote.apply >= 2 ? 'Apply with Caution' : 'Do Not Apply';
+  } else {
+    recommendation = 'Do Not Apply';
+  }
+
+  // A live gate (core or supporting) is never a clean "Apply".
+  if (gate && recommendation === 'Apply') recommendation = 'Apply with Caution';
+
+  // committeeNote: honest plain-English statement of the evaluator split when they diverge
+  const total = vote.apply + vote.skip;
+  let committeeNote = '';
+  if (total > 0) {
+    if (vote.apply === total) {
+      committeeNote = `Committee aligned — all ${total} evaluators would advance you.`;
+    } else if (vote.skip === total) {
+      committeeNote = `Committee aligned against — all ${total} evaluators would pass.`;
+    } else {
+      committeeNote = `Committee divided — ${vote.apply} of ${total} would advance you; the other ${vote.skip} would pass.`;
+    }
+  }
+
+  const divergent = vote.apply >= 1 && vote.skip >= 1;
+
+  return {
+    score, base: Math.round(base), bonus,
+    gWeighted: +gaps.G.toFixed(2), sWeighted: +str.S.toFixed(2),
+    edgeVsGap: evg, capped, capReason, lowConfidence,
+    vote, recommendation, verdict, divergent, reqMiss, committeeNote, gate, gateCapped,
+  };
+}
+/* ===== END SCORING BRAIN ===== */
+
+/* ── SYSTEM PROMPT ───────────────────────────────────────────────────────── */
+
+const systemPrompt = `You operate in two explicit modes during this analysis. Stay in each mode for its designated output — do not let one bleed into the other.
+
+MODE 1 — NEUTRAL CALIBRATED ANALYST (jdItems, strengths labels only):
+When assigning tier, centrality, status, and mapsToNeed, you are a neutral, calibrated analyst. Follow the evidence exactly. Labels must reflect reality neither cynically nor generously — the cynical persona has zero influence here. Label honestly even when it helps the candidate; label accurately even when it hurts. This is the instruction that drives the computed survivability score.
+
+MODE 2 — CYNICAL ADVERSARIAL VOICE (all narrative fields):
+For evaluators, objections, rejectionRisk, signalDeficits, shapeRisk, companyReality, strategicBrief, angle, hook, bestPathIn, draftedOpener, and priorityActions — this is where the adversarial intelligence system operates. Analytical, precise, no corporate pleasantries, no cheerleading, no generic encouragement. Highlight hard realities. Avoid generic phrases: "strong communication skills", "cross-functional collaboration", "fast-paced environment", "passionate", "proven track record". Give deep empirical insights.
+
+For Evaluators (Mode 2):
+- recruiter: wants safety, legibility, instant matching, checklist verification. Fears making a weird or confusing choice.
+- hiring: wants immediate execution value, team relief. Fears someone who requires 90 days to hold their own.
+- internal: wants territory defense, status quo preservation, direct peer comparisons. Skeptical of external hires.
+
+DOMAIN ADAPTATION — the three evaluators are fixed ROLES, not fixed people. Keep their core motivations constant (recruiter = gatekeeping, slate quality, legibility; hiring = execution risk, ramp time, delivery; internal = territory, peer comparison, status), but derive each evaluator's job title, vocabulary, and specific fears from the actual field of the role in the job description. Examples: for a physician role, the hiring manager is a department chair or CMO weighing clinical competence and liability, and the internal is a peer attending guarding the service line; for an HR generalist, the hiring manager is an HR director weighing compliance and culture fit, and the internal is a senior generalist protecting established process; for a teacher, a principal and a department lead; for sales, a sales director and a top-quota rep. Never use engineering titles unless the role is actually in engineering. The three ids must remain exactly "recruiter", "hiring", and "internal".
+
+COMMITTEE READ — committeeRead field (MODE 1 — neutral measured observer voice, NOT the cynical voice):
+Write a single paragraph, maximum 3 sentences, under 320 characters total. Synthesize the three evaluators: name the consensus or the split; name the one thing that would move the room. When they agree, say so plainly. When split, say what the split hinges on. Do NOT restate the verdict or repeat objections verbatim.
+DIVERGENCE ALERT: When the candidate's jdItem labels suggest they clear the requirements on paper but the evaluator scores lean skeptical (majority below 55), or when evaluators lean positive but significant required items are labeled missing, committeeRead MUST name that divergence explicitly — it is the highest-value observation in the report. Example shape: "On paper you clear the bar, but the room reads you as unproven; the gap here is evidence, not eligibility."
+
+Ensure every string is clean plain text. Output exact fields requested in the structured schema. You MUST include exactly 3 evaluators with ids "recruiter", "hiring", and "internal" — all three are required, never omit any.
+
+COMPRESSION — applies to EVERY narrative field. People skim; long fields get skipped:
+- Lead with the conclusion. No preamble, no restating the JD or the verdict, no throat-clearing.
+- HARD CAPS: every list has at most 3 items; every string is 160 characters or fewer; gutTake is 220 characters or fewer. Cut adjectives before you cut facts.
+- Every field must add NEW information. Never repeat the central gap, the verdict, or a fix that already appears in another field. If two fields would say the same thing, the second must say something new or stay short.
+
+DISTINCT LENSES — each field has ONE job, so the report does not say the same thing three times:
+- strategicBrief (credibility / risks): the candidate's ABSOLUTE strengths and risks, standalone.
+- benchmarkProfile (whereYouCompete / whereYouLag): ONLY framed relative to the named benchmark candidate — a comparison, never a re-list of the absolute strengths and risks above.
+ROLE-LEVEL CALIBRATION: Detect when the JD frames itself as entry-level, trainee, transition, or career-changer-friendly (signals: "transitioning from", "entry-level", "no experience required", "training provided", or requirements dominated by "willingness to learn" / "or eligibility to obtain"). When it does, calibrate the benchmark candidate to a REALISTIC applicant for that level — a fellow career-changer or trainee — NOT a senior lateral hire holding credentials the role explicitly says are optional or trainable. whereYouCompete / whereYouLag must compare against that level-appropriate benchmark.
+- signalDeficits: ONLY fixable missing signals, each with a concrete one-line fix. Not a restatement of risks.
+- evaluators[].objections: each evaluator raises their OWN distinct concern flowing from their distinct motivation. The three must NOT all name the same gap.
+- priorityActions: the single canonical to-do list. Do not duplicate, verbatim, a fix already stated in signalDeficits or shapeRisk — if it is the same action, it lives in priorityActions only.
+
+DRAFTED OPENER — draftedOpener field (Mode 2): A ready-to-send outreach opener of EXACTLY 3 sentences, addressed to the hiring manager or a referral, that the candidate could paste and send. Lead with the single strongest mapped outcome (a shipped result, a measured number) — not a greeting, not "I'm writing to express interest." Sentence 2 connects that outcome to this role's core need. Sentence 3 acknowledges and pre-empts the gate honestly without apologizing for it (e.g. naming the in-progress fix), turning the screen-out risk into a handled item. Plain text, first person, no salutation line, no signature, under 80 words total. If the verdict is "Do Not Apply", set draftedOpener to an empty string — do not draft outreach for an application that should not be sent.
+
+DECISIVENESS SCALING — match effort to the verdict:
+- When most required + core JD items are missing (a clear reject), be TERSE. Short objections, no elaborate counter-narratives for an unwinnable application. Give the verdict and the two highest-leverage facts, then stop. Do not pad a weak case with exhaustive analysis.
+
+LABELING RULES (Mode 1 — neutral analyst):
+jdItems: break the JD into real line-items. tier = required or preferred, from the JD OWN words (required / must have / minimum / X+ years => required; preferred / strongly preferred / a plus / nice to have / bonus / ideally / a major advantage => preferred; strongly preferred is STILL preferred; ambiguous => preferred). centrality = core (what the role primarily exists to do) / supporting / peripheral, judged against THIS role primary function (a tool or framework is usually peripheral for a judgment or design role). status = meets / partial / missing, strictly from the resume: vocabulary overlap ALONE is not meets, but demonstrated work, projects, or experience that genuinely satisfies the requirement IS meets — even when described in the JD's own language. Downgrade to partial only when evidence is adjacent or incomplete; missing only when there is no evidence at all. Do not downgrade a real, demonstrated capability merely because it shares wording with the JD.
+obtainable: true in two cases — (1) the JD explicitly offers the credential as acquirable: "or eligibility to obtain", "or ability to obtain", "willingness to learn", "or willing to acquire", or training/credentials provided during onboarding; (2) the item is a RESPONSIBILITY or DUTY — work the role performs on the job, not a prerequisite the candidate must bring to day one. Duty signals: item appears under a "Responsibilities", "Duties", "What You'll Do", or "Day-to-Day" section heading; or uses verbs of role performance — administer, record, annotate, transcribe, prepare, attend, operate, maintain, draft, coordinate, file, complete. Duties are trained and performed on the job; a candidate who has never done them yet is not disqualified. Exception: mark obtainable=false if the JD explicitly demands prior performance of that specific duty ("X years doing Y", "proven track record of Z", "experience administering X required"). Hard prerequisites are always obtainable=false regardless of section: active credential currently required, mandatory years-of-experience threshold, prior license with no escape hatch. Both cases are JD-text readings, not candidate judgments.
+CONDITIONAL REQUIREMENTS: Distinguish requirements the candidate must already POSSESS from requirements satisfiable by ELIGIBILITY or WILLINGNESS. When a JD requirement is phrased as "or eligibility to obtain", "or the ability to obtain", "or willing to acquire", "familiarity with or willingness to learn", "comfortable with or willing to", or describes training/credentials provided during onboarding, the requirement is meets as long as the candidate is plausibly eligible/able/willing and nothing disqualifies them. The act of obtaining the credential belongs in recommended actions, NOT as a disqualifying deficit. Reserve partial or missing status for HARD requirements the candidate genuinely lacks: active possession demanded now ("must hold a current X", "X required"), specific years of experience, or a mandatory prior license with no "or obtain" escape hatch. Do not mark a hard must-possess-now requirement as meets just because it is theoretically obtainable — the distinction is whether the JD itself offers the credential as obtainable, not whether it exists in the world.
+strengths: the candidate real strengths for this role, each with centrality (core/supporting/peripheral) and mapsToNeed (true only if it answers a real JD need).
+Framing: a PREFERRED gap is friction to neutralize, never a disqualifier. Never call a preferred gap table stakes, a bottleneck, or a wall. A REQUIRED gap on a core or supporting item is a real gate.`;
+
+/* ── MAIN API CALL ───────────────────────────────────────────────────────── */
+
+async function runBrief() {
+  const jd = document.getElementById('jdInput').value.trim();
+  const resume = document.getElementById('resumeInput').value.trim();
+  const btn = document.getElementById('runBtn');
+  const errBox = document.getElementById('errorBox');
+  const errTxt = document.getElementById('errorText');
+  const activeKey = getSavedApiKey();
+
+  errBox.className = '';
+  ALL_SECTION_IDS.forEach(id => {
+    document.getElementById(id).classList.remove('revealed');
+  });
+
+  // Key guard — BYOK only
+  if (!activeKey) {
+    errTxt.textContent = 'No API key saved. Enter your Anthropic key above, or use Load Demo to preview the tool.';
+    errBox.className = 'visible';
+    document.getElementById('accessGate').scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+
+  if (!jd || !resume) {
+    errTxt.textContent = 'Ingress parameters empty. Input both Target Specifications and Candidate Profile.';
+    errBox.className = 'visible';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.querySelector('.btn-label').textContent = 'Deconstructing…';
+  document.getElementById('stage-input').classList.remove('active');
+  document.getElementById('stage-loading').classList.add('active');
+  startStepper();
+
+  const userQuery = `JOB SPECIFICATIONS:\n${jd}\n\n---\n\nCANDIDATE RESUME:\n${resume}\n\n---\n\nRespond with a single JSON object only. No explanation, no markdown, no code fences. Use exactly this structure:\n{"survivabilityScore":integer,"jdItems":[{"text":"string","tier":"required|preferred","centrality":"core|supporting|peripheral","status":"meets|partial|missing","obtainable":boolean}],"strengths":[{"text":"string","centrality":"core|supporting|peripheral","mapsToNeed":true}],"verdict":"string","recommendation":"string","confidenceLevel":"string","evidenceStrength":"string","angle":"string","hook":"string","bestPathIn":{"path":"string","reason":"string","firstMove":"string"},"companyReality":{"read":"string","risk":"string","watchFor":["string"]},"strategicBrief":{"credibility":["string"],"risks":["string"]},"signalDeficits":[{"signal":"string","whyItMatters":"string","fix":"string"}],"rejectionRisk":{"stages":[{"stage":"string","riskLevel":"string","confidenceLevel":"string","evidenceStrength":"string","headline":"string","evidence":["string"]}]},"shapeRisk":{"level":"string","headline":"string","evidence":["string"],"fix":"string"},"evaluators":[{"id":"string","name":"string","title":"string","agenda":"string","score":integer,"confidenceLevel":"string","evidenceStrength":"string","gutTake":"string","objections":["string"],"evidence":["string"]}],"committeeRead":"string","benchmarkProfile":{"title":"string","summary":"string","likelySignals":["string"],"whereYouCompete":["string"],"whereYouLag":["string"],"marketReality":"string","fastestUpgrade":"string"},"draftedOpener":"string","priorityActions":["string"]}`;
+
+  const requestPayload = {
+    model: "claude-sonnet-4-5",
+    max_tokens: 16000,
+    system: systemPrompt,
+    messages: [{ role: "user", content: userQuery }]
+  };
+
+  try {
+    let response;
+    if (activeKey) {
+      response = await fetchWithBackoff(
+        "https://api.anthropic.com/v1/messages",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": activeKey,
+            "anthropic-version": "2023-06-01",
+            "anthropic-dangerous-direct-browser-access": "true"
+          },
+          body: JSON.stringify(requestPayload)
+        }
+      );
+    }
+
+    if (!response.ok) {
+      throw new Error(`Inference engine connection failure: STATUS ${response.status}`);
+    }
+
+    const result = await response.json();
+    const rawText = result?.content?.[0]?.text;
+
+    if (!rawText) {
+      throw new Error("Diagnostic report generated empty content payload.");
+    }
+
+    const cleaned = rawText.trim().replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/,'');
+    const parsedData = JSON.parse(cleaned);
+    // ── deterministic scoring: the model labelled; the number is COMPUTED ──
+    if (parsedData.jdItems && parsedData.jdItems.length) {
+      const _vote = (parsedData.evaluators || []).map(e => ({ id: e.id, lean: (e.score ?? 50) >= 55 ? "apply" : "skip" }));
+      const _b = computeScore({ jdItems: parsedData.jdItems, strengths: parsedData.strengths, evaluators: _vote, resumeLen: resume.length, jdLen: jd.length });
+      parsedData.survivabilityScore = _b.score;
+      parsedData.recommendation     = _b.recommendation;
+      parsedData.verdict            = _b.verdict;
+      if (_b.lowConfidence) parsedData.confidenceLevel = "low";
+      parsedData._brain = _b;
+    }
+    render(parsedData);
+    finishStepper();
+
+    setTimeout(() => {
+      document.getElementById('stage-loading').classList.remove('active');
+      document.getElementById('stage-result').classList.add('active');
+      window.scrollTo(0, 0);
+      revealSections();
+    }, 650);
+
+  } catch(err) {
+    finishStepper();
+    errTxt.textContent = 'Diagnostic Execution Halted: ' + err.message + '. Verify your API key credentials.';
+    errBox.className = 'visible';
+    document.getElementById('stage-loading').classList.remove('active');
+    document.getElementById('stage-input').classList.add('active');
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.querySelector('.btn-label').textContent = 'Analyze Target';
+  }
+}

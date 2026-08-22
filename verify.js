@@ -7,14 +7,20 @@
    Where things are. Change these two lines if you move anything.
    ─────────────────────────────────────────────────────────────────────── */
 
-const MAP_DIR    = 'map';                 // holds catalog.md and cards/
-const SOURCE_DIR = process.env.JOBFIT || '../job-fit';   // the repo being mapped
-
 const fs   = require('fs');
 const path = require('path');
 
+const MAP_DIR    = 'map';                 // holds catalog.md and cards/
+// Resolution order: explicit override, then the pinned snapshot that ships in
+// this repo, then a sibling clone. The snapshot is why a bare clone works.
+const SOURCE_DIR = process.env.JOBFIT
+  || (fs.existsSync('territory/scoring.js') ? 'territory' : '../job-fit');
+
+
+
 let failures = 0;
 let warnings = 0;
+let skipped = 0;
 
 function head(n, title) {
   console.log('\n' + '─'.repeat(70));
@@ -24,6 +30,8 @@ function head(n, title) {
 function pass(msg) { console.log('  PASS  ' + msg); }
 function fail(msg) { console.log('  FAIL  ' + msg); failures++; }
 function warn(msg) { console.log('  WARN  ' + msg); warnings++; }
+function skip(msg) { console.log('  SKIP  ' + msg); skipped++; }
+
 
 /* ── load the catalog and the card files ────────────────────────────────── */
 
@@ -91,7 +99,7 @@ if (orphans.length === 0) {
 head(3, 'every cited line, printed beside what the source says');
 
 if (!fs.existsSync(SOURCE_DIR)) {
-  warn(`cannot find the mapped source at ${SOURCE_DIR} — skipping`);
+   skip(`cannot find the mapped source at ${SOURCE_DIR} — skipping`);
   console.log('        Set the path: JOBFIT=/path/to/job-fit node verify.js');
 } else {
   const srcLines = {};
@@ -188,7 +196,7 @@ const scoringPath = path.join(SOURCE_DIR, 'scoring.js');
 const appPath     = path.join(SOURCE_DIR, 'app.js');
 
 if (!fs.existsSync(scoringPath) || !fs.existsSync(appPath)) {
-  warn('source files not found — skipping');
+  skip('source files not found — skipping');
 } else {
   let real = null;
   try {
@@ -210,7 +218,7 @@ if (!fs.existsSync(scoringPath) || !fs.existsSync(appPath)) {
       console.log(`        DEMO_DATA ships the literal ${D.survivabilityScore}, which is overwritten at run time`);
     }
   } catch (err) {
-    warn('could not recompute the demo score: ' + err.message);
+        skip('could not recompute the demo score: ' + err.message);
   }
 
   if (real === null) {
@@ -231,11 +239,15 @@ if (!fs.existsSync(scoringPath) || !fs.existsSync(appPath)) {
 /* ── RESULT ─────────────────────────────────────────────────────────────── */
 
 console.log('\n' + '═'.repeat(70));
-if (failures === 0) {
-  console.log(`ALL CHECKS PASS${warnings ? `  (${warnings} skipped)` : ''}`);
+
+if (failures === 0 && skipped === 0) {
+  console.log(`ALL CHECKS PASS${warnings ? `  (${warnings} warning${warnings===1?'':'s'})` : ''}`);
+} else if (failures === 0) {
+  console.log(`${skipped} CHECK${skipped===1?'':'S'} DID NOT RUN — the map is not verified`);
+  console.log('A green banner over a check that never ran is worse than a failure.');
 } else {
-  console.log(`${failures} FAILURE${failures === 1 ? '' : 'S'}${warnings ? `, ${warnings} skipped` : ''}`);
+  console.log(`${failures} FAILURE${failures === 1 ? '' : 'S'}${skipped ? `, ${skipped} not run` : ''}`);
   console.log('Leave this visible. A verifier that never fails is decoration.');
 }
 console.log('═'.repeat(70) + '\n');
-process.exit(failures === 0 ? 0 : 1);
+process.exit(failures === 0 && skipped === 0 ? 0 : 1);
