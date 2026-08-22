@@ -1,6 +1,6 @@
 # committeeNote
 
-**Type:** computed value (string)
+**Type:** computed value
 **State:** live
 **Stage:** 5 — VERDICT
 **Source:** `scoring.js:194–205` (built), `:213` (returned); displayed at `render.js:232`

@@ -1,6 +1,6 @@
 # edgeVsGap
 
-**Type:** computed value — the threshold that produces it lives in `cards/tie-factor.md`
+**Type:** computed value
 **State:** live
 **Stage:** 3 — MATH
 **Source:** `scoring.js:110–114` (`_edgeVsGap`), `scoring.js:171` (call site), `scoring.js:184` (only consumer), `scoring.js:212` (returned); displayed at `render.js:207–209, 219`

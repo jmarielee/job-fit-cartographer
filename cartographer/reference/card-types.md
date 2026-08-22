@@ -1,6 +1,6 @@
 # Card types — closed set
 
-Four types. Nothing else. Every card declares its type on the face.
+Six types. Nothing else. Every card declares its type on the face.
 
 ---
 
@@ -14,16 +14,28 @@ Does not hit · Source.
 
 ---
 
-## 2. `stage`
+## 2. `computed value`
 
-A position in the decision order. May not correspond to any single file.
+A value the system derives at run time. It exists only while the code runs;
+no file holds it. The card's job is to say what it is computed from and who
+reads it afterwards.
 
-Required sections: What happens here · What arrives · What leaves ·
-Hits · Does not hit · Source.
+Required sections: What it is · Why it is shaped this way · Hits ·
+Does not hit · Source.
 
 ---
 
-## 3. `threshold`
+## 3. `function`
+
+A named routine in the source. Mapped when a reader would search for it by
+name and needs to know what calling it changes.
+
+Required sections: What it is · Why it is shaped this way · Hits ·
+Does not hit · Source.
+
+---
+
+## 4. `threshold`
 
 **A constant that governs what the system is permitted to conclude.**
 
@@ -47,7 +59,7 @@ scales an output. A threshold decides whether a conclusion is allowed.
 
 ---
 
-## 4. `ghost`
+## 5. `ghost`
 
 A name with no wiring.
 
@@ -57,5 +69,16 @@ search and its result) · Why a reader will trip on it · What to do instead.
 `Hits` is replaced by `Proof of absence`. A ghost hits nothing — that is
 what makes it a ghost, and asserting it without the search is not permitted.
 
-A `leftover` uses the ghost skeleton with the state changed and a note on
-what last reached it.
+---
+
+## 6. `leftover`
+
+Real and wired, but nothing currently reaches it. Honest rather than
+misleading — a leftover does not pretend to be live.
+
+Uses the ghost skeleton with the state changed, plus a note on what last
+reached it.
+
+Required sections: What the name suggests · **Proof of absence** (the exact
+search and its result) · What last reached it · Why a reader will trip on
+it · What to do instead.

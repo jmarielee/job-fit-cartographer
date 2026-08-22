@@ -1,6 +1,6 @@
 # DEMO_DATA
 
-**Type:** computed value (sample labels, real math)
+**Type:** computed value
 **State:** live
 **Stage:** 6 — DISPLAY
 **Source:** `app.js:54` (the literal), `app.js:56–96` (`runDemo`), `app.js:68–75` (the recompute), `app.js:137` (wired to the button)

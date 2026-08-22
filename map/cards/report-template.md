@@ -1,6 +1,6 @@
 # report-template.md
 
-**Type:** ghost skeleton, state leftover
+**Type:** leftover
 **State:** leftover
 **Stage:** display
 **Source:** `operator/report-template.md` — last modified 2026-06-13
