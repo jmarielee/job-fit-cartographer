@@ -48,7 +48,7 @@ should say so.
 1. Read `map/catalog.md`. Rows are grouped by decision order — labels, math,
    guards, verdict, display — not by folder. The folder tree does not show
    that order.
-2. Read `cartographer/reference/collisions.md`. Four words in this territory
+2. Read `cartographer/reference/collisions.md`. Five words in this territory
    mean three different things each. Skipping this file is how readers land
    on the wrong card confidently.
 3. Open one card.
@@ -70,13 +70,48 @@ wrong.** Report it.
 
 ## Ghosts are marked
 
-Four things in this territory carry a name and no wiring. The largest is a
-folder of scoring rules the running app cannot read. A reader who edits it
-will see nothing change.
+Five things in this territory carry a name and no wiring: the Evidence Ledger,
+its state layer, `divergent`, the benchmark evaluator, and a spec file that
+predates the guard it describes. Two more are leftover — real and wired, but
+nothing currently reaches them. The largest of those is `operator/`, a folder
+of scoring rules the running app cannot read. A reader who edits it will see
+nothing change.
 
-Ghost cards are filed in the section where you would expect the thing to be
-working, not in a pile at the bottom. Each one carries the search that
+Ghost and leftover are not the same claim, and the catalog marks which is
+which. Ghost cards are filed in the section where you would expect the thing
+to be working, not in a pile at the bottom. Each one carries the search that
 proves absence.
+
+## The map checks itself
+
+`verify.js` reads the map and tests it against the source it maps. Run it from
+the repo root:
+
+    node verify.js
+
+Four checks:
+
+1. Every catalog row has a card behind it.
+2. Every card is reachable from the catalog.
+3. Every cited line is printed beside what the source file actually says on
+   that line — both ends of every range, and the short `:129` form resolved to
+   the card's subject file. Existence is not the test. A citation can sit
+   inside the file and still point at the wrong line; this puts the claim and
+   the code side by side so a reader can see it.
+4. The demo score in `demo-data.md` is recomputed from the source by running
+   the real scoring function. The card must state the number the code returns,
+   not the number sitting in the demo data.
+
+Check 4 is the one that matters most. `DEMO_DATA` ships a hardcoded score of 68
+that is overwritten at run time; the engine returns 64. A card written by
+reading the file would say 68 and be wrong, and nothing but recomputation would
+catch it.
+
+The verifier has caught real errors in this map, including a citation that
+pointed at line 123 for a guard that lives on line 124 — a line number that
+exists, in the right file, describing the right behaviour, and still wrong.
+Those corrections are logged in `walks/`. Failures are not hidden: a verifier
+that has never failed has not been tested.
 
 ## Coverage
 

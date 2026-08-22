@@ -1,6 +1,6 @@
 # Naming collisions — Job Fit Scanner
 
-Read this before trusting any word in the catalog. Four words in this
+Read this before trusting any word in the catalog. Five words in this
 territory mean three different things each. Landing on the wrong card
 confidently is the most likely failure in this map.
 
@@ -56,3 +56,15 @@ wrong constant.
 
 3 is a ghost. It is listed here because a reader who greps "benchmark" gets
 hits from 1 and 2 and may conclude 3 is real.
+
+---
+
+## "README.md"
+
+1. **`job-fit-cartographer/README.md`** — this repo. How to walk the map.
+2. **`job-fit/README.md`** — the mapped repo. How to run the scoring app.
+   A different document with a different job.
+
+The two repos sit side by side and are easy to swap. If you are reading
+about BYOK keys, demo mode, or an Anthropic API call, you are in the
+territory, not the map.
