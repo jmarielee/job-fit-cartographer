@@ -298,6 +298,92 @@ if (!fs.existsSync(scoringPath)) {
   console.log('        single numbers, and are not keyed here. Their cards carry tables.');
 }
 
+/* ── CHECK 6 — every ghost proof re-run against the source ─────────────────
+   rules.md: "A ghost is not asserted. It is proven." Every ghost card carries
+   the exact search that was run and what it returned.
+
+   But a pasted search result is a photograph. If someone wires `divergent`
+   up tomorrow, the card still shows "no matches" and the map lies in the
+   one place it promised not to. So the searches are re-run here against the
+   pinned territory and the result is compared to what the card claims.
+
+   Two claim shapes are read:
+     → no matches          must find zero
+     → 6 matches / 11 hits must find that many lines
+
+   Searches whose file list contains a glob are skipped and named — they
+   cannot be resolved without shelling out, and this runs on stdlib only.  */
+
+head(6, 'every ghost proof re-run against the source');
+
+if (!fs.existsSync(SOURCE_DIR)) {
+  skip('source not found — skipping');
+} else {
+  let ran = 0, broken = 0, unread = 0;
+
+  for (const card of existing) {
+    const text = fs.readFileSync(path.join(cardsDir, card), 'utf8');
+    if (!/^##\s+Proof of absence/mi.test(text)) continue;
+
+    // grep -n "TERM" fileA fileB   followed by   → no matches | → N matches
+    const re = /^grep\s+-[a-z]+\s+"((?:[^"\\]|\\.)*)"\s+([^\n]+)\n(?:→\s*([^\n]+)\n)/gm;
+    for (const m of text.matchAll(re)) {
+      const [, term, fileList, claim] = m;
+      const files = fileList.trim().split(/\s+/);
+
+      if (files.some(f => f.includes('*'))) {
+        console.log(`   skip ${card.padEnd(24)} "${term.slice(0,28)}" — file list uses a glob`);
+        unread++; continue;
+      }
+
+      let rx;
+      try { rx = new RegExp(term.replace(/\\\|/g, "|")); }   // grep BRE \| means alternation
+      catch { console.log(`   skip ${card.padEnd(24)} search is not a readable pattern`); unread++; continue; }
+
+      let hits = 0, missingFile = null;
+      for (const f of files) {
+        const p = path.join(SOURCE_DIR, f);
+        if (!fs.existsSync(p)) { missingFile = f; break; }
+        for (const line of fs.readFileSync(p, 'utf8').split('\n')) if (rx.test(line)) hits++;
+      }
+      if (missingFile) {
+        fail(`${card} — searches ${missingFile}, which is not in the territory`);
+        broken++; continue;
+      }
+
+      ran++;
+      // A leading count wins. "14 hits, zero declarations" is a count claim —
+      // the word "zero" later in the line describes what was NOT found, not
+      // the total. Only a claim that opens with "no matches"/"zero" is a
+      // zero claim.
+      const n = (claim.match(/^(\d+)\s+(?:match|hit)/) || [])[1];
+      const wantsZero = n === undefined && /^(no matches|zero)\b/i.test(claim);
+
+      if (wantsZero) {
+        if (hits === 0) {
+          console.log(`        ${card.padEnd(24)} "${term.slice(0,26)}" → still no matches`);
+        } else {
+          fail(`${card} claims no matches for "${term}" — the source now has ${hits}. It is not a ghost.`);
+          broken++;
+        }
+      } else if (n !== undefined) {
+        if (hits === Number(n)) {
+          console.log(`        ${card.padEnd(24)} "${term.slice(0,26)}" → ${hits}, as claimed`);
+        } else {
+          fail(`${card} claims ${n} for "${term}" — the source now has ${hits}.`);
+          broken++;
+        }
+      } else {
+        console.log(`   skip ${card.padEnd(24)} result "${claim.slice(0,30)}" is prose, not a count`);
+        unread++;
+      }
+    }
+  }
+
+  if (broken === 0) pass(`${ran} ghost proofs re-run, all still true`);
+  if (unread) console.log(`        ${unread} search${unread===1?'':'es'} not machine-readable — read those by eye.`);
+}
+
 /* ── RESULT ─────────────────────────────────────────────────────────────── */
 
 console.log('\n' + '═'.repeat(70));

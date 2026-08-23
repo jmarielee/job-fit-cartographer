@@ -3,7 +3,7 @@
 **Type:** ghost
 **State:** ghost — four identifiers referenced, none declared
 **Stage:** ledger
-**Source:** referenced at `render.js:600, 638, 665, 667, 673, 677`
+**Source:** referenced at `render.js:600, 638, 645, 647, 652, 660, 665, 667, 673, 677`
 
 ---
 
@@ -20,12 +20,20 @@ The state layer behind the Evidence Ledger.
 
 ```
 grep -n "RUN\b\|applyLedgerEdit\|ledgerScore\|LAST_REPORT" scoring.js render.js app.js index.html
-→ 11 hits, all between render.js:600 and render.js:677
-→ zero declarations
+→ 14 hits, zero declarations
+  render.js   600, 638, 645, 647, 652, 660, 665, 667, 673, 677  (10 — real references)
+  index.html  146, 148, 149, 151  (4 — element ids: ledgerScorebar,
+              ledgerScoreNum, ledgerScoreVerdict, ledgerScoreNote. The search
+              matches these on the substring `ledgerScore`. Markup, not code.
+              They declare nothing.)
 ```
 
 `index.html:327–331` loads `scoring.js`, `render.js`, `app.js` and nothing
 else. No fourth script, no module import, no inline block declares them.
+
+The four `index.html` ids are the orphaned display half. `render.js:647`
+writes a verdict into `ledgerScoreVerdict`, and nothing ever calls the
+function that would produce it. The markup outlived the state layer.
 
 ## Why a reader will trip on it
 
@@ -64,9 +72,9 @@ Nothing. They are not present at runtime.
 
 - **`computeScore`.** Complete and self-contained in the current
   `scoring.js`. It never referenced these.
-- **`DEMO_DATA` and `runDemo`.** The demo builds its own `_vote` array in
-  `app.js:70` and calls `computeScore` directly, bypassing this layer
-  entirely. That is why the demo still works.
+  **`DEMO_DATA` and `runDemo`.** The demo builds its own `_vote` array in
+  `app.js:69` and calls `computeScore` directly at `app.js:70`, bypassing
+  this layer
 - **`CAP_VALUE` / `GATE_CORE_CEIL`** — the wrong neighbours. Also globals
   declared in `scoring.js` and used in `render.js`. Those survived the
   July 14 replacement. These did not. Same pattern, opposite outcome.

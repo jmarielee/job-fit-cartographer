@@ -20,11 +20,12 @@ The exclusion is written as though this evaluator exists and must be handled:
 
 ```
 grep -n "benchmark" render.js app.js index.html
-→ 6 matches, all of them something else:
+→ 7 matches, all of them something else:
   render.js:437,438  benchmarkProfile (a narrative comparison)
   render.js:10,13    section-benchmark (a page section)
+  app.js:54          benchmarkProfile inside DEMO_DATA (sample data)
   app.js:118         section-benchmark (a page section)
-  index.html:179     section-benchmark (a page section)
+  index.html:179     <div class="result-section" id="section-benchmark"
 ```
 
 No evaluator with id `benchmark` appears anywhere. The system prompt

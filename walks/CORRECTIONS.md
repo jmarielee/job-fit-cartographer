@@ -121,3 +121,36 @@ standalone site. The spec stayed put and the implementation moved.
 
 That lineage is now stated at the top of `catalog.md`, because a reader who
 does not know it will trust the wrong file every time.
+
+## C10 — benchmark-evaluator.md undercounted its own proof
+
+**Claimed:** the search for "benchmark" returns 6 matches.
+
+**Source that corrected it:** `app.js:54`
+
+Check 6 re-runs every ghost proof against the pinned source instead of
+trusting the pasted result. The search returns 7, not 6. The seventh is
+`app.js:54` — the `DEMO_DATA` literal, which contains `benchmarkProfile`.
+It was missed because that line is a single 8,000-character JSON blob and
+does not read as a match at a glance.
+
+**Resolution:** the card states 7 and names `app.js:54`. The conclusion did
+not change — no evaluator with id `benchmark` exists, and all seven matches
+are still something else. The ghost is still a ghost. The proof was just
+sloppy about how many things it had ruled out.
+
+---
+
+## C11 — ledger-state-layer.md miscounted, and the first correction was worse
+
+**Claimed:** 11 hits, all between `render.js:600` and `render.js:677`.
+
+**Source that corrected it:** `index.html:146-151`
+
+Check 6 found 14 hits, not 11. The first correction written from that result
+said the state layer reached into the markup — that four references lived in
+`index.html`, and a reader deleting the orphaned `render.js` code would
+leave them behind.
+
+That was wrong, and it was wrong the same way C1 and C5 were wrong: written
+from a list of line numbers without opening the lines.
