@@ -236,6 +236,68 @@ if (!fs.existsSync(scoringPath) || !fs.existsSync(appPath)) {
   }
 }
 
+/* ── CHECK 5 — the value a threshold card states is the value in the source ─
+   Check 4 keys one card against the running code. This keys the constants.
+
+   A threshold card's whole claim is its number: TIE_FACTOR is 1.3, the cap
+   is 45. If the source moves and the card does not, the card is confidently
+   wrong in the one place a reader is most likely to trust it — and no
+   citation check catches that, because the citation still resolves and
+   still points at the right line.
+
+   Read the constant out of the source. Read the number out of the card's
+   Current value section. Compare. The source wins.                        */
+
+head(5, 'threshold cards state the value the source declares');
+
+if (!fs.existsSync(scoringPath)) {
+  skip('source not found — skipping');
+} else {
+  const src = fs.readFileSync(scoringPath, 'utf8').split('\n');
+
+  // constants declared as a bare number: `const NAME = 90;`
+  const declared = {};
+  src.forEach((line, i) => {
+    const m = line.match(/^const\s+([A-Z][A-Z0-9_]*)\s*=\s*(-?\d+(?:\.\d+)?)\s*;/);
+    if (m) declared[m[1]] = { value: m[2], line: i + 1 };
+  });
+
+  // card file -> the constant it is the card for
+  const keyed = {
+    'cap-value.md':      'CAP_VALUE',
+    'gate-core-ceil.md': 'GATE_CORE_CEIL',
+    'realism-ceil.md':   'REALISM_CEIL',
+    'tie-factor.md':     'TIE_FACTOR',
+  };
+
+  let checked = 0, wrong = 0;
+  for (const [card, name] of Object.entries(keyed)) {
+    const p = path.join(cardsDir, card);
+    if (!fs.existsSync(p)) { fail(`${card} — card missing`); wrong++; continue; }
+    if (!declared[name])   { fail(`${name} — not declared as a bare constant in scoring.js`); wrong++; continue; }
+
+    const text = fs.readFileSync(p, 'utf8');
+    const sec  = text.split(/^##\s+Current value\s*$/mi)[1];
+    if (!sec) { fail(`${card} — no "## Current value" section to key`); wrong++; continue; }
+
+    const claim = (sec.match(/`(-?\d+(?:\.\d+)?)`/) || [])[1];
+    if (claim === undefined) { fail(`${card} — Current value states no number`); wrong++; continue; }
+
+    checked++;
+    const real = declared[name].value;
+    if (Number(claim) === Number(real)) {
+      console.log(`        ${card.padEnd(20)} says ${claim.padEnd(6)} · scoring.js:${declared[name].line} declares ${real}`);
+    } else {
+      fail(`${card} says ${claim} — scoring.js:${declared[name].line} declares ${real}. The file wins.`);
+      wrong++;
+    }
+  }
+
+  if (wrong === 0) pass(`${checked} threshold values match the source`);
+  console.log('\n        Weights (TIER_W, CENT_W, STATUS_F, EDGE_BONUS) are objects, not');
+  console.log('        single numbers, and are not keyed here. Their cards carry tables.');
+}
+
 /* ── RESULT ─────────────────────────────────────────────────────────────── */
 
 console.log('\n' + '═'.repeat(70));

@@ -12,18 +12,24 @@ Full map: `../map/catalog.md`
 Rows carry four columns and no values.
 
 ```
-## 3 — GUARDS · computed
+## 5 — VERDICT · computed
 
-| Noun             | What it is                        | State | Card                       |
-|------------------|-----------------------------------|-------|----------------------------|
-| REALISM_CEIL     | nothing is ever a sure thing      | live  | cards/realism-ceil.md      |
-| CAP_VALUE        | ceiling when required items unmet | live  | cards/cap-value.md         |
-| GATE_CORE_CEIL   | ceiling when a core gate is live  | live  | cards/gate-core-ceil.md    |
-| confidence floor | clamp when inputs are thin        | live  | cards/confidence-floor.md  |
-| Guard 2          | numbered but never written        | ghost | cards/guard-two.md         |
+| Noun                     | What it is                             | State | Card                          |
+|--------------------------|----------------------------------------|-------|-------------------------------|
+| THE GATE                 | the one thing likely to screen you out | live  | cards/the-gate.md             |
+| verdict                  | four score bands                       | live  | cards/verdict.md              |
+| recommendation           | apply / caution / do not               | live  | cards/recommendation.md       |
+| vote                     | evaluators counted as apply or skip    | live  | cards/vote.md                 |
+| committeeNote            | plain statement of the split           | live  | cards/committee-note.md       |
+| divergent                | computed, never read                   | ghost | cards/divergent.md            |
+| benchmark evaluator      | filtered out, never exists             | ghost | cards/benchmark-evaluator.md  |
+| evaluator vote threshold | unnamed, duplicated across files       | drift | cards/vote-threshold.md       |
 ```
 
-Note the ghost sitting inside Guards rather than in a pile at the end.
+Note the two ghosts sitting inside Verdict rather than in a pile at the end.
+`divergent` is filed here because this is where someone would go looking for
+it — a ghost in its natural aisle is a tripwire marked exactly where people
+trip.
 
 ---
 
@@ -74,8 +80,8 @@ recorded. Leftovers are honest — they do not pretend to be wired.
 **Change:** raise `TIE_FACTOR` from 1.3 to 1.6.
 
 **Hits:** `edgeVsGap` reaches `edge` less often → clean "Apply"
-recommendations become "Apply with Caution" → the Evidence Ledger prints
-"no edge dominance" more often.
+recommendations become "Apply with Caution" → the Score Receipt's dominance
+line reads "no edge dominance" more often.
 
 **Does not hit:** the score. Not by one point. Every number on screen is
 identical.

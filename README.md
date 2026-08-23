@@ -136,11 +136,22 @@ Four checks:
 4. The demo score in `demo-data.md` is recomputed from the source by running
    the real scoring function. The card must state the number the code returns,
    not the number sitting in the demo data.
+5. Every threshold card's stated value is read out of `scoring.js` and
+   compared to what the card claims. `tie-factor.md` says 1.3; the source
+   declares 1.3 on line 39. If the source moves and the card doesn't, this
+   fails by name.
 
 Check 4 is the one that matters most. `DEMO_DATA` ships a hardcoded score of 68
 that is overwritten at run time; the engine returns 64. A card written by
 reading the file would say 68 and be wrong, and nothing but recomputation would
 catch it.
+
+Checks 4 and 5 are the only ones keyed against something other than the map
+itself. Checks 1 and 2 ask whether the map agrees with the map. Check 3 puts
+the claim and the code side by side and leaves the judgement to a reader.
+Only 4 and 5 ask the source a question and fail when the answer differs —
+one by running the code, one by reading the constants it declares. Five of
+the 38 cards are keyed that way. The rest rest on the citations in Check 3.
 
 The verifier has caught real errors in this map, including a citation that
 pointed at line 123 for a guard that lives on line 124 — a line number that
