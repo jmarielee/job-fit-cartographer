@@ -124,7 +124,7 @@ the repo root:
 
     node verify.js
 
-Four checks:
+Five checks:
 
 1. Every catalog row has a card behind it.
 2. Every card is reachable from the catalog.
