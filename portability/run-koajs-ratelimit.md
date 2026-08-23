@@ -26,7 +26,7 @@ points at the end.
 
 ---
 
-<!-- PASTE THE FULL RUN BELOW THIS LINE -->
+<!-- THE FULL RUN  -->
 
 # Inventory
 
