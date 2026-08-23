@@ -6,9 +6,8 @@ the whole thing.
 
 This repo contains two things. Do not confuse them.
 
-- **The cartographer** — `cartographer/`. Instructions for making maps.
-      Contains the instructions, plus this territory's naming collisions and one
-  worked example.
+- **The cartographer** — `cartographer/`. Instructions for making maps, plus
+  this territory's naming collisions and one worked example.
 - **The map it made** — `map/`. One worked map of the Job Fit Scanner repo.
 
 ---
@@ -150,12 +149,13 @@ that is overwritten at run time; the engine returns 64. A card written by
 reading the file would say 68 and be wrong, and nothing but recomputation would
 catch it.
 
-Checks 4, 5 and 6 are the only ones keyed against something other than the map
-itself. Checks 1 and 2 ask whether the map agrees with the map. Check 3 puts
-the claim and the code side by side and leaves the judgement to a reader.
-Only 4 and 5 ask the source a question and fail when the answer differs —
-one by running the code, one by reading the constants it declares. Five of
-the 38 cards are keyed that way. The rest rest on the citations in Check 3.
+Checks 4, 5 and 6 are the only ones keyed against something other than the
+map itself. Checks 1 and 2 ask whether the map agrees with the map. Check 3
+puts the claim and the code side by side and leaves the judgement to a
+reader. Only 4, 5 and 6 ask the source a question and fail when the answer
+differs — one runs the code, one reads the constants it declares, one
+re-runs every ghost proof. Thirteen of the 38 cards are keyed that way. The
+rest rest on the citations in Check 3.
 
 The verifier has caught real errors in this map, including a citation that
 pointed at line 123 for a guard that lives on line 124 — a line number that
@@ -171,4 +171,4 @@ possible. Full shelves, single dose.
 ## Cold walks
 
 Recorded walks are in `walks/`, along with the corrections they forced. The
-protocol
+protocol was written before they ran.
