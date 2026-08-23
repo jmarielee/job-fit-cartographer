@@ -7,7 +7,8 @@ the whole thing.
 This repo contains two things. Do not confuse them.
 
 - **The cartographer** — `cartographer/`. Instructions for making maps.
-  Contains no facts about any particular territory.
+      Contains the instructions, plus this territory's naming collisions and one
+  worked example.
 - **The map it made** — `map/`. One worked map of the Job Fit Scanner repo.
 
 ---
@@ -17,7 +18,7 @@ This repo contains two things. Do not confuse them.
 Job Fit Scanner — https://github.com/jmarielee/job-fit
 
 A browser tool that scores a resume against a job description. 13 files,
-2,259 lines. A model assigns labels; deterministic math computes the score,
+3,484 lines. A model assigns labels; deterministic math computes the score,
 applies caps and floors, and issues the verdict.
 
 The source repo is **not modified by this map**. The map cites it.
