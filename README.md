@@ -124,7 +124,7 @@ the repo root:
 
     node verify.js
 
-Five checks:
+Six checks:
 
 1. Every catalog row has a card behind it.
 2. Every card is reachable from the catalog.
@@ -140,13 +140,17 @@ Five checks:
    compared to what the card claims. `tie-factor.md` says 1.3; the source
    declares 1.3 on line 39. If the source moves and the card doesn't, this
    fails by name.
+6. Every ghost card's proof search is re-run against the source and compared
+   to what the card claims. A pasted search result is a photograph; this
+   makes it a check. It caught two of my own cards the day it was written —
+   see C10 and C11 in `walks/`.
 
 Check 4 is the one that matters most. `DEMO_DATA` ships a hardcoded score of 68
 that is overwritten at run time; the engine returns 64. A card written by
 reading the file would say 68 and be wrong, and nothing but recomputation would
 catch it.
 
-Checks 4 and 5 are the only ones keyed against something other than the map
+Checks 4, 5 and 6 are the only ones keyed against something other than the map
 itself. Checks 1 and 2 ask whether the map agrees with the map. Check 3 puts
 the claim and the code side by side and leaves the judgement to a reader.
 Only 4 and 5 ask the source a question and fail when the answer differs —
