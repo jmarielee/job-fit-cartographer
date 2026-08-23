@@ -51,7 +51,8 @@ corrections are recorded in `walks/`.
 
 ## Hits / Does not hit
 
-Every card carries both.
+Every card carries both — except ghost and leftover cards, where `Hits` is
+replaced by **Proof of absence**. See `reference/card-types.md`.
 
 **Hits** — what a change to this touches. Named, with source citation.
 

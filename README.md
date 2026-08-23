@@ -168,3 +168,12 @@ possible. Full shelves, single dose.
 
 Recorded walks are in `walks/`, along with the corrections they forced. The
 protocol was written before they ran.
+
+## Portability
+
+`portability/` holds one run of the unedited `cartographer/` folder against
+koajs/ratelimit — a library I did not write — by a cold session. Partial
+transfer: the governance model and the wrong-neighbour discipline survived,
+the exhaustive inventory and the closed card set did not. The run also found
+two contradictions in my own instruction files. Published whole, including
+the seven places the method strained.
