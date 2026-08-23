@@ -84,6 +84,38 @@ which. Ghost cards are filed in the section where you would expect the thing
 to be working, not in a pile at the bottom. Each one carries the search that
 proves absence.
 
+## The third edge
+
+Most maps chart two kinds of movement: what lives inside what, and what
+feeds what. This map charts a third — **governance**. A constant that
+changes what the system is permitted to conclude, while moving no data.
+
+`TIE_FACTOR` is 1.3. Raise it to 1.6 and every number on screen is
+identical — the score does not move by one point. What changes is that
+`edgeVsGap` reaches `edge` less often, so clean "Apply" recommendations
+become "Apply with Caution." A reader watching the score will conclude the
+change did nothing. The advice changed and the number did not.
+
+That is why `threshold` is a card type here and not a footnote. Eleven of
+the 38 cards are thresholds. Each one names what it gates, what moves when
+it moves, and the same-vocabulary neighbour that does the opposite thing —
+`TIE_FACTOR` and `EDGE_BONUS` are both called "edge" and share no code path.
+
+## The verifier runs the code, it does not read it
+
+Check 4 does not parse `scoring.js` looking for a number. It loads the real
+`computeScore` function, runs it against the demo input, and compares the
+answer to what the card claims.
+
+`DEMO_DATA` ships a hardcoded score of 68 that is overwritten at run time.
+The engine returns 64. A card written by reading the file would say 68 and
+be wrong, and no citation check would catch it — the citation would resolve,
+point at the right file, and describe the right variable. Only recomputation
+catches it.
+
+The territory ships pinned in `territory/` at commit 9ce4511, so this runs
+on a bare clone with no setup. Clone the repo and run `node verify.js`.
+
 ## The map checks itself
 
 `verify.js` reads the map and tests it against the source it maps. Run it from
