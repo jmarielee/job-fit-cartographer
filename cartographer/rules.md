@@ -38,6 +38,9 @@ Three edge types. Name which one a card is describing.
 - **live** — named somewhere *and* read somewhere. Both halves required.
 - **leftover** — real and wired, nothing currently reaches it. Honest.
 - **ghost** — a name with no wiring. A tripwire.
+- **drift** — real and wired, but two places that should agree don't. The
+  code and the spec, or two copies of the same number. Not a ghost: both
+  halves are live. The card names which two disagree.
 
 **A ghost is not asserted. It is proven.** Every ghost card carries the exact
 search that was run and what it returned. A claim without a search is a guess

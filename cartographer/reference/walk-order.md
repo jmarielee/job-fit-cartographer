@@ -4,7 +4,8 @@
 
 1. `map/catalog.md`
 2. `cartographer/reference/collisions.md` — only if the question contains
-   the word gate, confidence, score, or benchmark. Which is most questions.
+      the word gate, confidence, score, benchmark, or README. Which is most
+   questions.
 3. One card.
 4. Stop.
 

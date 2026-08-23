@@ -154,5 +154,5 @@ possible. Full shelves, single dose.
 
 ## Cold walks
 
-Recorded walks, including the ones that failed, are in `walks/`. The protocol
-was written before they ran.
+Recorded walks are in `walks/`, along with the corrections they forced. The
+protocol
