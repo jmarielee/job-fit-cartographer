@@ -33,7 +33,7 @@ Three edge types. Name which one a card is describing.
 - **Governance** — this constrains what that is permitted to conclude.
   No data moves. The verdict changes. This is the edge type most maps miss.
 
-## Live, leftover, ghost
+## Live, leftover, ghost, drift
 
 - **live** — named somewhere *and* read somewhere. Both halves required.
 - **leftover** — real and wired, nothing currently reaches it. Honest.

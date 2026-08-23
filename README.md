@@ -144,10 +144,6 @@ Six checks:
    makes it a check. It caught two of my own cards the day it was written —
    see C10 and C11 in `walks/`.
 
-Check 4 is the one that matters most. `DEMO_DATA` ships a hardcoded score of 68
-that is overwritten at run time; the engine returns 64. A card written by
-reading the file would say 68 and be wrong, and nothing but recomputation would
-catch it.
 
 Checks 4, 5 and 6 are the only ones keyed against something other than the
 map itself. Checks 1 and 2 ask whether the map agrees with the map. Check 3
