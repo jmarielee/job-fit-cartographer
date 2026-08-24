@@ -51,7 +51,7 @@ A reader who wants a stricter tool reaches for the wrong one.
 
 ---
 
-## A ghost card
+## A leftover — the dangerous kind
 
 `../map/cards/operator-folder.md` — full card.
 
@@ -68,12 +68,24 @@ nothing errors, nothing warns.
 
 ---
 
-## A leftover
+## A leftover — the harmless kind
 
 `report-template.md`. Last touched 2026-06-13, unreferenced. Real, harmless,
 recorded. Leftovers are honest — they do not pretend to be wired.
 
 ---
+
+## A ghost
+
+`../map/cards/divergent.md` — full card.
+
+grep -n "divergent" render.js app.js index.html
+→ no matches
+
+Computed correctly, returned in `_brain`, read by nothing. It is filed under
+Verdict rather than in a pile at the end, because Verdict is where a reader
+looking for divided-committee logic will go — and `divergent` is the first
+thing they will find.
 
 ## One change and what it hits
 

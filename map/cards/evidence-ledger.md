@@ -110,8 +110,8 @@ Nothing. It does not run.
 readings labeled the evidence and the majority decided each label.
 
 That sentence describes the ledger. The ledger does not run. The sentence
-never renders either — it sits inside the hidden section — so no user has
-ever been shown a false claim. But a reader of the source will find it and
+never renders either — it sits inside the hidden section — so no user of the page has been shown it. 
+The repo's front page is another matter — see job-fit/README.md:27. But a reader of the source will find it and
 believe it.
 
 **"Model labels, math decides" is intact and verified.** `computeScore`
