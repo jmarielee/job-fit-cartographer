@@ -72,9 +72,28 @@ Nothing. They are not present at runtime.
 
 - **`computeScore`.** Complete and self-contained in the current
   `scoring.js`. It never referenced these.
-  **`DEMO_DATA` and `runDemo`.** The demo builds its own `_vote` array in
+- **`DEMO_DATA` and `runDemo`.** The demo builds its own `_vote` array in
   `app.js:69` and calls `computeScore` directly at `app.js:70`, bypassing
-  this layer
+  this layer entirely.
 - **`CAP_VALUE` / `GATE_CORE_CEIL`** — the wrong neighbours. Also globals
   declared in `scoring.js` and used in `render.js`. Those survived the
   July 14 replacement. These did not. Same pattern, opposite outcome.
+
+## What to do instead
+
+Nothing here can be edited into working. These four names are not a broken
+feature; they are the absence of one, and no change to `render.js` restores
+them.
+
+**Do not wire the display back up on its own.** `renderLedgerSection` is
+defined at `render.js:663` and called from nowhere, and `render.js:665`
+reads `RUN`. Adding that call to `render()` without declaring the state
+layer first throws a ReferenceError before the section renders, and takes
+the rest of the report down with it.
+
+To restore the stage, or to remove it cleanly, both routes are in
+`cards/evidence-ledger.md` — it carries the recovery table and the exact
+line ranges to delete.
+
+To change the score itself, the live path never went through here:
+`computeScore` in `scoring.js`, see `cards/compute-score.md`.
