@@ -171,9 +171,16 @@ protocol was written before they ran.
 
 ## Portability
 
-`portability/` holds one run of the unedited `cartographer/` folder against
-koajs/ratelimit — a library I did not write — by a cold session. Partial
-transfer: the governance model and the wrong-neighbour discipline survived,
-the exhaustive inventory and the closed card set did not. The run also found
-two contradictions in my own instruction files. Published whole, including
-the seven places the method strained.
+`portability/` holds two runs of the unedited `cartographer/` folder against
+libraries I did not write — koajs/ratelimit (JavaScript) and
+textstat/textstat (Python) — by cold sessions with no memory of building it.
+
+Both independently reported the same defect in my closed set of card types:
+no legal type for a plain coefficient, switch, or parameter. Two languages,
+two domains, two sessions that never saw each other, one identical finding.
+Six catalog rows in the second run ship with `∅` in the card path column —
+nouns that exist and have no legal card under my own rules.
+
+The runs also found two documented-but-absent guards in maintained
+libraries, and one contradiction between two of my own instruction files,
+now fixed. Published whole, including every place the method strained.
