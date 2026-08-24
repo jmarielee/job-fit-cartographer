@@ -46,6 +46,11 @@ were not on this list: the evaluator vote threshold
 W2, W4 and W5 were written and never run. They are left listed so the gap is
 visible rather than tidied away.
 
+**Note added 2026-08-24 — count.** Seven walks are now recorded, not four.
+Walks 5, 6 and 7 (`walk-cold-verifier-strictness.md`,
+`walk-cold-strictness-rerun.md`, `walk-cold-strictness-controlled.md`) were
+run after the note above was written. It is left as written.
+
 **Note added 2026-08-24 — two things this protocol did not control.**
 
 *Question wording.* W2 was run twice. The first attempt

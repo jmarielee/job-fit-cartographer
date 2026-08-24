@@ -195,23 +195,56 @@ possible. Full shelves, single dose.
 
 ## Cold walks
 
-Four walks, run cold. One failed.
+Seven walks, run cold. Three failed. All seven are published as run.
 
-**`walks/walk-cold-cap-value.md` is the failure.** A reader with the README
-and the catalog and nothing else was asked why an application capped at 45.
-It found the right row, then answered from the catalog row alone and stated
-the rule wrong — it said one unmet required item caps the score. The code
-needs two or more: `scoring.js:137` tests `reqMiss >= 2`, and `:70-73` is
-what gets counted. The card was right the whole time; the catalog row had
-invited the reader to stop one file early. The row is rewritten, and the
-walk is kept as run. Logged as C15.
+**The chain worth reading is three walks long.**
 
-That is the only evidence in this repo that a stranger, not the author,
-decided where the map was wrong. The other three walks passed:
-`walk-cold-vote-threshold.md`, `walk-cold-operator-ghost.md`,
-`walk-cold-cartographer-comprehension.md`.
+`walk-cold-cap-value.md` failed. A reader with the README and the catalog
+and nothing else was asked why an application capped at 45. It found the
+right row, then answered from the row alone and stated the rule wrong — it
+said one unmet required item caps the score. The code needs two or more:
+`scoring.js:137` tests `reqMiss >= 2`, and `:70-73` is what gets counted.
+The card was right the whole time; the catalog row had explained a rule
+instead of pointing at one, and invited the reader to stop a file early.
 
-`walks/PROTOCOL.md` was written before any walk ran and lists five questions.
-Four were run. The unrun three are still listed rather than deleted.
-`walks/CORRECTIONS.md` indexes all sixteen corrections and says which file
-each lives in — start there, not in the folder listing.
+The row was rewritten as C15 to name that a count and conditions exist
+without holding either.
+
+`walk-cold-strictness-controlled.md` then hit the same row, cold, and said:
+these files explicitly say the count and conditions are on the missing card,
+so I can't tell you exactly what to edit. It stopped and asked for the card.
+
+A published failure, a documented fix, and an independent cold reader
+confirming the fix works — across three walks, none run for that purpose.
+
+**The three failures have three different causes**, and each was fixed in
+the layer that caused it. `walk-cold-cap-value.md` was a map defect: the
+catalog leaked content the card owned. `walk-cold-verifier-strictness.md`
+was a question defect: "the tool" names both this territory and `verify.js`,
+and the reader answered about the wrong one. `walk-cold-strictness-rerun.md`
+was a protocol defect: the setup assumed a reader limited to the files
+supplied but never said so, and a browsing-capable reader reached the source
+and stated five constants that appear in neither file it was given.
+
+`walk-cold-strictness-controlled.md` is the first walk run with all three
+fixes in place and the first to pass all four conditions in one run. It also
+carried the `45 → 44` cliff correctly — a one-point change to a constant
+that removes an entire recommendation outcome, because the "Apply with
+Caution" band opens at exactly 45 — and surfaced the hardcoded Score Receipt
+string unprompted.
+
+**What seven walks have not shown.** The one-card model has been
+demonstrated twice, in `walk-cold-vote-threshold.md` and
+`walk-cold-strictness-controlled.md`, and both needed two turns: a reader
+holding only the catalog correctly cannot answer, so it asks for the card.
+Whether a one-turn pass is possible is not established by any walk here.
+Across the three failures the common thread is that the reader reached a
+satisfying answer without opening a card — from a row, from the README, and
+from the source. That is named rather than resolved.
+
+`walks/PROTOCOL.md` was written before any walk ran and lists five
+questions. The unrun ones are still listed rather than deleted, and the two
+protocol changes are appended with dates rather than folded into the
+original text. `walks/CORRECTIONS.md` indexes every correction and says
+which file each lives in — start there, not in the folder listing.
+
