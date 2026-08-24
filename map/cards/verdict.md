@@ -5,6 +5,15 @@
 **Stage:** 5 — VERDICT
 **Source:** `scoring.js:175–179` (the bands), `:213` (returned); displayed at `render.js:256` (hero) and, in the removed ledger, `render.js:647`
 
+## Current value
+
+`75`, `55`, `35` — three boundaries, four bands. `scoring.js:176-179`.
+
+## What it gates
+
+Which of four words the reader sees under the score. Nothing else: not the
+recommendation, not the committee read, not the colour of the ring.
+
 ## What it is
 
 Four words, chosen by four numbers:

@@ -43,7 +43,7 @@ grep -n "RUN\b\|applyLedgerEdit\|ledgerScore\|LAST_REPORT" *.js *.html
 `index.html:140` carries inline `style="display:none"`. The only line that
 clears it is `render.js:678` — inside the function that never runs.
 
-## Why it fails silently
+## Why a reader will trip on it
 
 If `renderLedgerSection()` were called, the page would throw a
 `ReferenceError` on `RUN` immediately and the failure would be obvious.

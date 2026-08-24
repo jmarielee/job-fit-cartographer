@@ -1,6 +1,6 @@
 # operator/
 
-**Type:** ghost
+**Type:** leftover
 **State:** leftover — accurate, unread
 **Stage:** spec folder
 **Source:** `operator/` — 6 files, last modified 2026-06-13 and 2026-07-04
@@ -53,6 +53,13 @@ nothing. Nothing errors. Nothing warns. The file saves cleanly and remains
 accurate — it just has no effect.
 
 An obviously stale file is harmless. A correct one that does nothing is not.
+
+## What last reached it
+
+Nothing in the browser application, ever. `operator/` is read by a human or a
+model that is handed the files directly; it has never been reachable from
+`index.html`. The six files were last modified 2026-06-13 and 2026-07-04,
+while every file that runs was touched later in July.
 
 ## Lineage
 

@@ -27,7 +27,6 @@ Whether the system is permitted to say something decisive at all.
 
 ## Why it is shaped this way
 
-<!-- JODI: check this reasoning — this is my read, not necessarily yours -->
 A near-empty resume against a near-empty job description can produce a
 mathematically clean 0 or 90. Both are lies. The clamp forces the output
 into the middle band where the verdict reads as uncertain rather than

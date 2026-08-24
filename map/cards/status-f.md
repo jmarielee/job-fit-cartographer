@@ -1,6 +1,6 @@
 # STATUS_F
 
-**Type:** threshold
+**Type:** object
 **State:** live
 **Stage:** 3 — MATH
 **Source:** `scoring.js:34` (declaration), read at `:51` and `:53`, applied at `:54`

@@ -21,7 +21,7 @@ grep -rn "report-template" render.js app.js index.html scoring.js
 Nothing references it. It also sits inside `operator/`, which the running
 application cannot read at all — see `cards/operator-folder.md`.
 
-## Why this is a leftover and not a ghost
+## Why a reader will trip on it
 
 It is honest. It does not describe behaviour that contradicts the running
 system, and a reader who opens it will find a template, not a false rule.
@@ -32,8 +32,10 @@ the repo, while everything that runs was touched in July.
 
 ## What last reached it
 
-<!-- JODI: fill this in if you know. If you don't, say so — "unknown, last
-touched 2026-06-13" is a legitimate card line and better than a guess. -->
+Unknown. Last modified 2026-06-13, the same day as `identity.md` and
+`evaluator-personas.md` — the three oldest files in the repo. Nothing in the
+running code has ever referenced it, so there is no read to date. "Unknown,
+last touched 2026-06-13" is the honest answer and is better than a guess.
 
 ## What to do instead
 

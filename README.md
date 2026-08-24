@@ -96,10 +96,17 @@ identical — the score does not move by one point. What changes is that
 become "Apply with Caution." A reader watching the score will conclude the
 change did nothing. The advice changed and the number did not.
 
-That is why `threshold` is a card type here and not a footnote. Eleven of
-the 38 cards are thresholds. Each one names what it gates, what moves when
-it moves, and the same-vocabulary neighbour that does the opposite thing —
-`TIE_FACTOR` and `EDGE_BONUS` are both called "edge" and share no code path.
+That is why `threshold` is a card type here and not a footnote. Seven of the
+38 cards are thresholds. Each one carries its current value, what it gates,
+what changes if you move it, and the same-vocabulary neighbour that does the
+opposite thing — `TIE_FACTOR` and `EDGE_BONUS` are both called "edge" and
+share no code path.
+
+It was eleven until this audit. `TIER_W`, `CENT_W`, `STATUS_F` and
+`EDGE_BONUS` are weights: they scale a number rather than deciding what the
+system may conclude, which my own type definition rules out. Two portability
+runs said so independently before I saw it. They are `object` cards now, and
+the reasoning is in `card-types.md` and C16.
 
 ## The verifier runs the code, it does not read it
 

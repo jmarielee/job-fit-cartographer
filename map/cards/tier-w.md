@@ -1,6 +1,6 @@
 # TIER_W
 
-**Type:** threshold
+**Type:** object
 **State:** live
 **Stage:** 3 — MATH
 **Source:** `scoring.js:32` (declaration), `scoring.js:42` (only read), inside `_itemWeight` (`:41–45`)

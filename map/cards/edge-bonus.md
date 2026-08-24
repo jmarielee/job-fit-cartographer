@@ -1,6 +1,6 @@
 # EDGE_BONUS
 
-**Type:** threshold
+**Type:** object
 **State:** live
 **Stage:** 3 — MATH
 **Source:** `scoring.js:35` (declaration), `scoring.js:58–67` (`_computeStrength`), `scoring.js:129–131` (application), `scoring.js:210` (returned as `bonus`)

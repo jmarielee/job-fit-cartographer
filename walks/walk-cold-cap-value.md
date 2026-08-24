@@ -1,6 +1,6 @@
 # Cold walk 4 — the 45 cap
 
-Date: 2026-08-25
+Date: 2026-08-24
 Reader: ChatGPT, temporary chat, no memory.
 Files given: README.md, map/catalog.md. Nothing else.
 Question: "Why did this application get capped at 45?"

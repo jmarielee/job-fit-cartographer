@@ -1,16 +1,27 @@
 # Guard numbering
 
-**Type:** ghost
+**Type:** object
 **State:** drift — both files real, numbering disagrees
 **Stage:** guards
 **Source:** `scoring.js` comments vs `operator/rules.md` Guards section
 
 ---
 
-## What the name suggests
+## What it is
 
-Nothing, at first. The drift is only visible if you read both files, which
-is exactly why it belongs on a card.
+Comment text, in two files, numbering the same three guards differently.
+`scoring.js` labels them in code comments; `operator/rules.md` labels them in
+prose. Neither label is read by anything that runs.
+
+Nothing about the name suggests a problem, which is exactly why it belongs on
+a card: the drift is only visible if you read both files.
+
+## Why it is shaped this way
+
+It is not shaped. It is an accident of sequence — `operator/rules.md` was
+written first and numbered the guards in the order it described them, and the
+`scoring.js` comments were written later against a build where the confidence
+floor had already moved. Nobody renumbered.
 
 ## The disagreement
 
@@ -20,7 +31,7 @@ is exactly why it belongs on a card.
 | confidence floor | Guard 2 | `// Guard 3` |
 | core-gate ceiling | Guard 3 | unnumbered |
 
-## Proof
+## Proof of drift
 
 ```
 grep -n "Guard" scoring.js

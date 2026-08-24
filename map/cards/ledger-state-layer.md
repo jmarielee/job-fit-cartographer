@@ -7,7 +7,7 @@
 
 ---
 
-## What the names suggest
+## What the name suggests
 
 The state layer behind the Evidence Ledger.
 

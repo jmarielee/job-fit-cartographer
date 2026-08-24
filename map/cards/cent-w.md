@@ -1,6 +1,6 @@
 # CENT_W
 
-**Type:** threshold
+**Type:** object
 **State:** live
 **Stage:** 3 — MATH
 **Source:** `scoring.js:33` (declaration), read at `:43` (items), `:63` (strengths), `:97` (gate sort)

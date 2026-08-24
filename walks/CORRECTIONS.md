@@ -8,6 +8,31 @@ claims. Three were mine; one was a card I had already written.
 
 ---
 
+## Index — all sixteen, and where they live
+
+Sixteen corrections across three files, numbered in the order they were
+found rather than the order they are filed. C13 is a correction of a
+correction: the first fix was worse than the error.
+
+| # | What was wrong | File |
+|---|---|---|
+| C1 | "Guard 2 is missing" | `CORRECTIONS.md` |
+| C2 | "operator/ is a ghost" — half wrong | `CORRECTIONS.md` |
+| C3 | one file inside operator/ IS a ghost — missed | `CORRECTIONS.md` |
+| C4 | "TIE_FACTOR does not hit the display" | `CORRECTIONS.md` |
+| C5 | the decision order was wrong | `CORRECTIONS.md` |
+| C6 | "the Evidence Ledger is a live stage" — wrong twice | `CORRECTIONS-addendum.md` |
+| C7 | the removal is dated and the code recoverable | `CORRECTIONS-addendum.md` |
+| C8 | a third generation of drift | `CORRECTIONS-addendum.md` |
+| C9 | a filter tests for a value its schema forbids | `CORRECTIONS-C9.md` |
+| C10 | "the math owns the number" — true, wrong place | `CORRECTIONS-addendum.md` |
+| C11 | "Mode 2 doesn't reach the computed output" | `CORRECTIONS-addendum.md` |
+| C12 | benchmark-evaluator.md undercounted its own proof | `CORRECTIONS.md` |
+| C13 | ledger-state-layer.md miscounted, and the first fix was worse | `CORRECTIONS.md` |
+| C14 | compute-score.md cited five app.js lines it never opened | `CORRECTIONS.md` |
+| C15 | the catalog answered a question it should have pointed at | `CORRECTIONS.md` |
+| C16 | four coefficients typed as thresholds | `CORRECTIONS.md` |
+
 ## C1 — "Guard 2 is missing" — WRONG
 
 **Claimed:** `scoring.js` comments number guards 1 and 3 with nothing
@@ -256,3 +281,43 @@ caught a row carrying a rule — which the stated test does not describe, and
 which is worse, because a wrong value looks like a number and a wrong rule
 looks like understanding. The catalog has now leaked content twice, in two
 forms, and both times a cold reader trusted it over the card that owned it.
+
+---
+
+## C16 — four coefficients were typed as the thing my own spec says they are not
+
+**Claimed:** eleven of the 38 cards were `threshold` cards, and the README
+said each one named what it gates.
+
+**Wrong on both halves.**
+
+`card-types.md` draws the line itself: "A weight scales an output. A threshold
+decides whether a conclusion is allowed." `TIER_W`, `CENT_W`, `STATUS_F` and
+`EDGE_BONUS` scale outputs. Their own cards say so in their opening lines —
+`tier-w.md` calls TIER_W something "multiplied by CENT_W to give one item's
+weight," and `status-f.md` calls STATUS_F "what a gap costs, as a fraction of
+the item's weight." Four coefficients were wearing the type that exists to
+mark governance.
+
+And six of the eleven had no `What it gates` section at all, so the README
+sentence was falsifiable by one grep.
+
+**How it was found.** Not by me. The two portability runs in `portability/`
+— koajs/ratelimit and textstat/textstat, different languages, cold sessions
+that never saw each other — both reported the same defect: no legal type for
+a plain coefficient. I published that finding in the README and did not go
+back and check whether my own map had the same problem. It did. Six catalog
+rows in the textstat run ship with `∅` for exactly this reason; four rows in
+my own map hid it by picking the nearest wrong type instead.
+
+**Fixed.** The four are `object` cards now. `verdict.md` and
+`vote-threshold.md` are genuine thresholds and gained the two sections they
+were missing. Seven thresholds remain. `card-types.md` states where
+coefficients belong, and names the deeper gap it does not fix: `ghost` and
+`leftover` are wiring states occupying slots in a set that otherwise answers
+"what kind of thing is this", which is why `drift` has no type and
+`guard-numbering.md` is an `object` with `State: drift`.
+
+**What this cost.** The headline number went from eleven to seven. The type
+is stronger for it: a governance type that admits coefficients is not a
+governance type.

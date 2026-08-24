@@ -5,6 +5,18 @@
 **Stage:** 5 — VERDICT
 **Source:** `scoring.js:344` and `app.js:69` (the two copies), `scoring.js:237` (a third, in prose); the disagreeing copy is `render.js:35–36`
 
+## Current value
+
+`55`, written twice as a bare literal - `scoring.js:344` and `app.js:69`.
+The display layer uses `65` and `50` for the same input (`render.js:35-36`).
+That disagreement is the drift.
+
+## What it gates
+
+Whether an evaluator's model-assigned score becomes an `apply` lean or a
+`skip` lean, and through that, whether `recommendation` can reach a clean
+`Apply` at all.
+
 ## What it is
 
 The number that decides whether an evaluator counts as a yes. It has no name:

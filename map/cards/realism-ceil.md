@@ -24,7 +24,6 @@ thing.
 
 ## Why it is shaped this way
 
-<!-- JODI: check this reasoning — this is my read, not necessarily yours -->
 The score measures survivability, not merit. Even a perfect match faces a
 hiring committee, an internal candidate, a budget, and a room the candidate
 cannot see. A 100 would claim knowledge the system does not have.
