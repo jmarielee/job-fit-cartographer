@@ -123,11 +123,6 @@ The runs also found two documented-but-absent guards in maintained
 libraries, and one contradiction between two of my own instruction files,
 now fixed. Published whole, including every place the method strained.
 
-## Coverage
-
-Every noun on the decision path has a card. Three files carry no card of their own — app.js, index.html 
-and styles.css — because each is cited from the cards that own the things inside it. That is what makes the one-card walk
-possible. Full shelves, single dose.
 
 ## Cold walks
 
