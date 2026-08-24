@@ -150,7 +150,7 @@ map itself. Checks 1 and 2 ask whether the map agrees with the map. Check 3
 puts the claim and the code side by side and leaves the judgement to a
 reader. Only 4, 5 and 6 ask the source a question and fail when the answer
 differs — one runs the code, one reads the constants it declares, one
-re-runs every ghost proof. Thirteen of the 38 cards are keyed that way. The
+re-runs every ghost proof. Eleven of the 38 cards are keyed that way. The
 rest rest on the citations in Check 3.
 
 The verifier has caught real errors in this map, including a citation that
