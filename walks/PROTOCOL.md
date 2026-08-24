@@ -46,6 +46,26 @@ were not on this list: the evaluator vote threshold
 W2, W4 and W5 were written and never run. They are left listed so the gap is
 visible rather than tidied away.
 
+**Note added 2026-08-24 — two things this protocol did not control.**
+
+*Question wording.* W2 was run twice. The first attempt
+(`walk-cold-verifier-strictness.md`) failed because "the tool" names both
+the mapped territory and `verify.js`, and the reader answered about the
+verifier. The second (`walk-cold-strictness-rerun.md`) removed the
+ambiguity. Both are published; the second does not replace the first. The
+rule above against re-running and relabelling exists to stop a failure being
+hidden, and neither is hidden.
+
+*Retrieval.* The setup section assumes a reader limited to the files
+supplied, but the prompt never said so, and the walkers in walks 5 and 6
+were browsing-capable. Walk 6's reader stated five constants that appear
+nowhere in the two files it was given, so it reached the source. Walks 1
+through 4 show no retrieved content and stay inside what the supplied files
+contain, but that is an observation after the fact rather than a control
+that was in place. From walk 7 onward the prompt must say that the walker
+answers only from the files supplied. Walks 5 and 6 are not rescored against
+a rule they were never given.
+
 ## Pass conditions
 
 All four must hold.

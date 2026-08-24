@@ -172,6 +172,22 @@ see C14.
 Those corrections are logged in `walks/`. Failures are not hidden: a verifier
 that has never failed has not been tested.
 
+## Portability
+
+`portability/` holds two runs of the unedited `cartographer/` folder against
+libraries I did not write — koajs/ratelimit (JavaScript) and
+textstat/textstat (Python) — by cold sessions with no memory of building it.
+
+Both independently reported the same defect in my closed set of card types:
+no legal type for a plain coefficient, switch, or parameter. Two languages,
+two domains, two sessions that never saw each other, one identical finding.
+Six catalog rows in the second run ship with `∅` in the card path column —
+nouns that exist and have no legal card under my own rules.
+
+The runs also found two documented-but-absent guards in maintained
+libraries, and one contradiction between two of my own instruction files,
+now fixed. Published whole, including every place the method strained.
+
 ## Coverage
 
 Every noun in the territory has a card. That is what makes the one-card walk
@@ -199,19 +215,3 @@ decided where the map was wrong. The other three walks passed:
 Four were run. The unrun three are still listed rather than deleted.
 `walks/CORRECTIONS.md` indexes all sixteen corrections and says which file
 each lives in — start there, not in the folder listing.
-
-## Portability
-
-`portability/` holds two runs of the unedited `cartographer/` folder against
-libraries I did not write — koajs/ratelimit (JavaScript) and
-textstat/textstat (Python) — by cold sessions with no memory of building it.
-
-Both independently reported the same defect in my closed set of card types:
-no legal type for a plain coefficient, switch, or parameter. Two languages,
-two domains, two sessions that never saw each other, one identical finding.
-Six catalog rows in the second run ship with `∅` in the card path column —
-nouns that exist and have no legal card under my own rules.
-
-The runs also found two documented-but-absent guards in maintained
-libraries, and one contradiction between two of my own instruction files,
-now fixed. Published whole, including every place the method strained.
