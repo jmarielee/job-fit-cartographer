@@ -113,7 +113,7 @@ group with two cards — the two ghosts it left behind.
 
 ---
 
-## What this changes about the map
+## What C1–C5 changed about the map
 
 Four of the five corrections came from the same root cause: `operator/` is
 the original specification build and the root JS files are a later
@@ -121,6 +121,10 @@ standalone site. The spec stayed put and the implementation moved.
 
 That lineage is now stated at the top of `catalog.md`, because a reader who
 does not know it will trust the wrong file every time.
+
+The corrections that follow — C10, C11, C12 — have a different root cause,
+and it is not the territory. It is this map trusting a derivation over a
+lookup.
 
 ## C10 — benchmark-evaluator.md undercounted its own proof
 
