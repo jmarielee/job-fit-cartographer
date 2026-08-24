@@ -154,3 +154,58 @@ leave them behind.
 
 That was wrong, and it was wrong the same way C1 and C5 were wrong: written
 from a list of line numbers without opening the lines.
+
+
+
+## C12 — compute-score.md cited five app.js lines it never opened
+
+**Claimed:** `computeScore` is called from `app.js:71`; the guard is at
+`app.js:69`; the assignments are `app.js:72–74`; `_brain` is attached at
+`app.js:75`; `evaluator.score` is read at `app.js:71`.
+
+**Source that corrected it:**
+
+```
+sed -n '68,74p' app.js
+
+app.js:68    if (demo.jdItems && demo.jdItems.length) {
+app.js:69      const _vote = (demo.evaluators || []).map(...)
+app.js:70      const _b = computeScore({ ... });
+app.js:71      demo.survivabilityScore = _b.score;
+app.js:72      demo.recommendation     = _b.recommendation;
+app.js:73      demo.verdict            = _b.verdict;
+app.js:74      demo._brain = _b;
+```
+
+All five were wrong. The call site is `:70`, the guard is `:68`, the
+assignments are `:71–73`, `_brain` is `:74`, and `evaluator.score` is `:69`.
+
+**How they got that way.** `scoring.js:343–350` and `app.js:68–74` are the
+same block written twice — once for a real run, once for the demo. They are
+near-identical, so the app.js numbers appear to have been derived by
+offsetting from the scoring.js numbers instead of opened. The offset is
+wrong because `scoring.js` carries one line the demo does not:
+`scoring.js:349`, the `lowConfidence` assignment. Four citations came out
+one line high. The fifth was two lines high, so it was not even a consistent
+offset — it was arithmetic done twice, differently, and checked neither time.
+
+**What caught it, and what didn't.** Check 3 flagged one of the five:
+`app.js:75` is a closing brace, and the blank-line/lone-brace heuristic
+printed it as the single `?` row in the run. That was the whole visible
+symptom — one warning line under a green banner. The other four landed on
+real, plausible-looking code and Check 3 had nothing to say about them,
+because it cannot decide whether a citation says what the card claims. It
+only reports what the line contains and leaves the judgement to a reader.
+Four of five were invisible to the verifier and were found by a reader
+putting the two blocks side by side.
+
+**Resolution:** five citations corrected. The run's only warning cleared,
+and Check 3's `?` count went to zero.
+
+**What this says about the map.** This is the fourth correction in this log
+written from line numbers that were reasoned about rather than read — C1,
+C5, C11, and now this one. The pattern is not carelessness about which file;
+every one of these citations named the right file and described the right
+behaviour. The pattern is trusting a derivation over a lookup. Check 3 exists
+because of it, and Check 3 caught one in five. That ratio is the honest
+measure of what a citation checker can do.

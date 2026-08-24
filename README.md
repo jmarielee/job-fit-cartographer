@@ -153,9 +153,12 @@ differs — one runs the code, one reads the constants it declares, one
 re-runs every ghost proof. Eleven of the 38 cards are keyed that way. The
 rest rest on the citations in Check 3.
 
-The verifier has caught real errors in this map, including a citation that
-pointed at line 123 for a guard that lives on line 124 — a line number that
-exists, in the right file, describing the right behaviour, and still wrong.
+The verifier has caught real errors in this map, and readers have caught
+errors the verifier could not. Two days before submission, five citations on
+the densest card pointed at lines that existed, in the right file, describing
+the right behaviour, and were still wrong. Check 3 flagged one of the five —
+see C12.
+
 Those corrections are logged in `walks/`. Failures are not hidden: a verifier
 that has never failed has not been tested.
 
