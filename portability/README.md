@@ -1,136 +1,189 @@
-# Portability — one run against territory I did not write
+# Portability — two runs against territory I did not write
 
 The map in `../map/` is of my own repo. That answers whether the method
 works. It does not answer whether the method is mine or the territory's.
 
-This folder is one run of the unedited `cartographer/` folder against a
-library I have never worked on, by a cold session with no memory of building
-it. It is published whole, including the seven places the method strained
-and the two contradictions it found in my own instruction files.
+This folder holds two runs of the unedited `cartographer/` folder against
+libraries I have never worked on, by cold sessions with no memory of
+building it. Both are published whole, including every place the method
+strained.
 
 ---
 
-## The territory
+## The finding worth reading first
 
-**koajs/ratelimit** — https://github.com/koajs/ratelimit
-Rate limiter middleware for Koa. MIT licensed,
-Copyright (c) 2019-present Koa.js contributors.
-Mapped at commit `212a4ff`, last touched 2025-06-05.
+Two cold sessions. Two languages. Two unrelated domains. Neither knew the
+other existed. **Both independently reported the same defect in my closed
+set of card types.**
 
-The decision core is `index.js` (128 lines), `limiter/memory.js` (73 lines),
-and `limiter/redis.js` (1 line, which delegates to an external package).
+| | Territory | Reported |
+|---|---|---|
+| Run 1 | koajs/ratelimit — JavaScript, web middleware | No legal type for a routing switch, a class, or a callback hook. All three forced into `object`, which hides the property that matters. |
+| Run 2 | textstat/textstat — Python, numerical library | No legal type for a formula coefficient or a scaling parameter. Flesch coefficients, SMOG constants, cache size, reading-time rate left with no card. |
+
+One run finding a flaw is an anecdote. Two independent runs finding the same
+flaw is a result: **the closed set of six is too narrow for general
+software.** It was built for a decision system and it fits decision systems.
+
+Run 2 refused to paper over it. Six catalog rows ship with `∅` in the card
+path column — nouns that exist and have no legal card under my own rules.
+A catalog that reports the method's failure in the method's own output
+format is a better answer than a catalog that looks complete.
+
+I have not widened the card set. Two days before a deadline is the wrong
+time to redesign an ontology, and the finding is worth more standing than
+patched.
+
+---
+
+## The territories
+
+**Run 1 — koajs/ratelimit** · https://github.com/koajs/ratelimit
+Rate limiter middleware for Koa. MIT, Copyright (c) 2019-present Koa.js
+contributors. Mapped at commit `212a4ff`, last touched 2025-06-05.
+Decision core: `index.js` (128 lines), `limiter/memory.js` (73),
+`limiter/redis.js` (1 line, delegating to an external package).
+
+**Run 2 — textstat/textstat** · https://github.com/textstat/textstat
+Readability metrics for Python. MIT. Mapped at commit `e398f27`, last
+touched 2026-02-18. 150 tracked files, 5,834 lines of Python.
 
 **No source is reproduced here.** The cards cite file and line, as
-`cartographer/rules.md` requires. The repository is not vendored into this
-one and nothing in it was modified.
+`cartographer/rules.md` requires. Neither repository is vendored into this
+one and nothing in either was modified.
 
-**Not affiliated with Koa.js, and not a review.** This map describes how the
-code decides, not whether it decides well. `drift` marks two places where
-the README and the runtime disagree; that is a documentation observation,
-not a defect report, and it is offered in the same spirit as the drift
-marked against my own repo in `../map/`.
+**Not affiliated with either project, and not a review.** These maps
+describe how the code decides, not whether it decides well. `drift` marks
+places where documentation and runtime disagree; that is an observation,
+offered in the same spirit as the drift marked against my own repo in
+`../map/`.
 
-## How the run was set up
+## How the runs were set up
 
-A fresh session, no memory of this repo or of building it. Given the four
+Fresh sessions, no memory of this repo or of building it. Given the four
 instruction files by URL — `cartographer/README.md`, `rules.md`,
 `identity.md`, `reference/card-types.md` — and the target repo by URL.
-Nothing was uploaded, nothing was coached, and no correction was offered
-while it worked. It was told once, at the start, that a rough honest run was
-worth more to me than a polished one.
+Nothing uploaded, nothing coached, no correction offered while they worked.
+Each was told once that a rough honest run was worth more than a polished
+one.
 
-The full run is in `run-koajs-ratelimit.md`, unedited.
-
----
-
-## Result: partial transfer
-
-### What survived
-
-**The threshold type.** `max: 2500` was identified as a governance edge
-without being prompted, and written up with all five required sections. The
-run then called `duration` a *less clean* threshold, because it governs a
-temporal boundary rather than a direct numerical comparison. That is the
-type being used with judgement, not pattern-matched off my examples.
-
-**The wrong neighbour.** It found `limit.remaining` versus `calls` — two
-counters, same vocabulary, and only one of them is read by the verdict at
-`index.js:103`. A reader watching the response header would be watching the
-wrong number. That is exactly the failure the Does-not-hit section exists to
-prevent, found on code I have never read.
-
-**The decision-order walk.** It surfaced that blacklist is evaluated before
-whitelist, so a whitelist entry cannot rescue a blacklisted request. Nothing
-in the folder structure says that.
-
-**Documentation drift in the territory's own README.** The Options list
-presents `remaining`, `reset`, and `total` as top-level settings while the
-runtime reads them from `opts.headers`; and the `status` option is
-implemented but absent from that list. Both are cited to line.
-
-### What did not survive
-
-Seven strain points are recorded in full at the end of the run. The four
-that matter most:
-
-1. **The method rejects this territory by its own scope rule.** `identity.md`
-   puts "anything small enough to simply read" out of scope. The decision
-   core here is about 200 lines. The run said so, then continued explicitly
-   labelled as a forced test rather than a valid map. A cartographer that
-   knows when it is out of scope is the result I would rather have than a
-   clean map of something that did not need one.
-
-2. **The territory is not closed.** The default `redis` driver delegates its
-   counter semantics to the external `async-ratelimiter` package. A one-card
-   answer to "what changes if I change Redis counter behaviour" cannot be
-   given from inside this repository. The map can name the boundary and no
-   more.
-
-3. **The closed set of six card types is too decision-specific for general
-   software.** A categorical routing switch (`driver`), a class
-   (`MemoryLimiter`), and higher-order policy hooks (`blacklist`,
-   `whitelist`, `id`) all had to be filed as `object`, which hides the
-   property that actually matters about each. The run flagged every one of
-   these coercions on the card face rather than hiding them.
-
-4. **"Every tracked file" does not compose with tooling.** A general repo
-   contains `.editorconfig`, `.npmrc`, `.remarkrc.js` and similar, whose
-   readers live outside the repository. My four states — live, leftover,
-   ghost, drift — have no room for "live through an external convention" or
-   "cannot be established from territory-local evidence." The run refused to
-   invent a fifth state and recorded sweep 4 as incomplete instead.
-
-## Two contradictions it found in my own instruction files
-
-Neither of my earlier cold walks caught these. Neither did I.
-
-**Fixed.** `rules.md:54` said "Every card carries both," meaning Hits and
-Does not hit. `reference/card-types.md:69` said "`Hits` is replaced by
-`Proof of absence`" for ghost cards. Two of the four instruction files gave
-opposite instructions. `rules.md` now names the exception and points at
-`card-types.md`.
-
-**Recorded, not fixed.** `rules.md:13` says sweep 2 collects "any bare
-number." `rules.md:24-25` says a noun is not "anything a reader would never
-search for by name." On my own territory these never collided, because every
-bare number in `scoring.js` is a policy constant. On a general repo they
-collide immediately — CI runner versions, port numbers, semver components.
-This is a real tension in the method and it is left standing rather than
-papered over two days before a deadline. Anyone using this folder on general
-software will hit it.
+Full runs: `run-koajs-ratelimit.md` and `run-textstat.md`.
 
 ---
 
-## What this run does and does not establish
+## What survived contact with unfamiliar territory
 
-It establishes that the governance model, the wrong-neighbour discipline,
-and the decision-order walk produce real findings on territory the method
-was not built for, and that the folder is legible enough for a cold session
-to apply it without help.
+**The threshold type.** Run 1 identified `max: 2500` as a governance edge
+unprompted and wrote it up with all five required sections, then called
+`duration` a *less clean* threshold because it governs a temporal boundary
+rather than a direct comparison. That is the type being used with judgement,
+not pattern-matched off my examples.
 
-It does not establish that the method is ready for general software repos.
-It is not. It is a cartographer for decision systems, and this run is the
-clearest available evidence of where that boundary actually sits — which is
-narrower than `identity.md` currently implies.
+**The wrong neighbour, twice, on code I have never read.**
 
-One run, one territory, one session. Reported as such.
+Run 1 found `limit.remaining` versus `calls` — two counters, same
+vocabulary, and only one is read by the verdict at `index.js:103`. A reader
+watching the response header is watching the wrong number.
+
+Run 2 found that `syllable_threshold` carries three different live values
+depending on which caller you are inside: `2` by default in the public API
+(`textstat.py:724`), `3` for English in Gunning Fog (`constants.py:20`), and
+`0` when Dale-Chall calls it (`_dale_chall_readability_score.py:45`). At
+zero, the easy-word list becomes the discriminator instead of syllable
+length. Same parameter name, three meanings, one of which inverts what the
+word "difficult" means.
+
+**Documentation drift in both territories' own docs.**
+
+Run 1: koajs's README lists `remaining`, `reset` and `total` as top-level
+options; the runtime reads them from `opts.headers` (`index.js:52-56`). The
+`status` option is implemented (`index.js:113`) and absent from the Options
+list.
+
+Run 2: textstat's README says the library "requires at least 3 sentences for
+a result" for SMOG (`README.md:192-193`). `_smog_index.py` contains no such
+guard — it counts sentences, divides, and catches only division by zero. A
+single-sentence input returns `15.90`. The README documents a guard that
+does not exist. Separately, the SMOG docstring says polysyllabic words have
+"more than 3 syllables" while `_count_polysyllable_words.py:26` implements
+`>= 3`.
+
+**The decision-order walk.** Run 1 surfaced that blacklist is evaluated
+before whitelist, so a whitelist entry cannot rescue a blacklisted request.
+Nothing in the folder structure says that.
+
+**Both runs refused to manufacture evidence.** No invented leftovers. Ghost
+cards marked provisional where the absence proof could not be completed.
+Dates marked `UNVERIFIED` rather than guessed. `∅` rather than a
+mislabelled card. My own rule — a claim without a search is a guess and does
+not ship — obeyed by strangers.
+
+## What did not survive
+
+Beyond the card-set gap above, both runs reported:
+
+**The territory is not always closed.** koajs delegates its default Redis
+counter to an external package. A one-card answer to "what changes if I
+change Redis counter behaviour" cannot be given from inside that repository.
+The map can name the boundary and no more.
+
+**"Every tracked file" does not compose with tooling.** General repos carry
+`.editorconfig`, `.npmrc`, `.remarkrc.js`, and a tracked PNG. Their readers
+live outside the repository, and a binary has no meaningful source line. My
+four states have no room for "live through an external convention" or
+"cannot be established from territory-local evidence." Both runs recorded
+their inventories as incomplete rather than inventing a fifth state.
+
+**There is not always one decision order.** textstat fans out into many
+independent metrics, most of them "counts → arithmetic → score." Treating
+`text_standard` as a repository-wide spine would misdescribe the territory.
+My catalog's central organising principle assumes a single pipeline.
+
+**The bare-number rule explodes on numerical code.** `rules.md:13` collects
+"any bare number"; `rules.md:24-25` excludes anything a reader would never
+search for by name. On my own territory these never collided, because every
+bare number in `scoring.js` is a policy constant. On a scientific library
+every coefficient and test fixture wants a card. This tension is left
+standing and documented rather than papered over.
+
+## One contradiction found and fixed
+
+Run 1 found that `rules.md:54` said "Every card carries both" — Hits and
+Does not hit — while `reference/card-types.md:69` said "`Hits` is replaced
+by `Proof of absence`" for ghost cards. Two of my four instruction files
+gave opposite instructions. Neither of my earlier cold walks caught it.
+`rules.md` now names the exception and points at `card-types.md`.
+
+## Citation corrections made to the runs
+
+Both runs are published as produced, with two citation errors corrected and
+noted here rather than silently:
+
+- Run 2 cited `README.md:176-178` for textstat's SMOG sentence-minimum
+  claim. The claim is at `README.md:192-193`; 176-178 is the Gunning Fog
+  section.
+- Run 2 cited `textstat.py:915-946` for the 1–18 grade clamp. The clamp is
+  at `textstat.py:1004`.
+
+Both were caught by opening the cited lines. That is the same failure class
+my own C1, C5 and C11 record, appearing in a cold session's output, and it
+is the reason `verify.js` Check 3 prints the source line beside every claim
+instead of testing whether the line exists.
+
+---
+
+## What these runs do and do not establish
+
+They establish that the governance model, the wrong-neighbour discipline,
+and the drift state produce real findings on territory the method was not
+built for — including two documented-but-absent guards in maintained
+libraries — and that the folder is legible enough for cold sessions to apply
+it without help.
+
+They do not establish that the method is ready for general software repos.
+It is not, and now there is replicated evidence of exactly where the
+boundary sits. `identity.md` says this is a cartographer for decision
+systems. These two runs are the sharpest available statement of how narrow
+that actually is.
+
+Two runs, two territories, two sessions. Reported as such.
