@@ -213,3 +213,46 @@ every one of these citations named the right file and described the right
 behaviour. The pattern is trusting a derivation over a lookup. Check 3 exists
 because of it, and Check 3 caught one in five. That ratio is the honest
 measure of what a citation checker can do.
+
+---
+
+## C15 — the catalog answered a question it was supposed to point at
+
+**Claimed:** catalog row for `CAP_VALUE` — "ceiling when required items
+unmet."
+
+**Source that corrected it:**
+
+```
+scoring.js:70     it.tier === 'required' &&
+scoring.js:71     (it.centrality === 'core' || it.centrality === 'supporting') &&
+scoring.js:72     it.status === 'missing' &&
+scoring.js:73     !it.obtainable
+scoring.js:137    if (reqMiss >= 2) {
+```
+
+The cap needs **two or more** such items. Core or supporting only. Not
+obtainable. One unmet required item does nothing.
+
+**How it was found.** Cold walk 4. Asked why an application was capped at
+45, a reader with only `README.md` and `map/catalog.md` answered from that
+row and said a single unmet required qualification could cap the score. It
+did not open a card. It did not ask for one. The row read like an answer, so
+it stopped.
+
+`cards/cap-value.md` had it right the whole time — "two or more core or
+supporting required items unmet and not obtainable," line 16. When the card
+was handed over on the second turn, the reader corrected every part of its
+own answer unprompted, including all three exclusions. The card was never
+the problem.
+
+**Resolution:** the row now reads "ceiling; count and conditions on the
+card." It names that a count and conditions exist and holds neither.
+
+**What this says about the map.** `catalog.md` opens by declaring that it
+points and does not explain, and names the failure mode: "If a row tells you
+a value, the row is wrong." Walk 1 caught a row carrying a value. This one
+caught a row carrying a rule — which the stated test does not describe, and
+which is worse, because a wrong value looks like a number and a wrong rule
+looks like understanding. The catalog has now leaked content twice, in two
+forms, and both times a cold reader trusted it over the card that owned it.
