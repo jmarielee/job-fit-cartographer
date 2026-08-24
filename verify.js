@@ -351,7 +351,6 @@ if (!fs.existsSync(SOURCE_DIR)) {
         broken++; continue;
       }
 
-      ran++;
       // A leading count wins. "14 hits, zero declarations" is a count claim —
       // the word "zero" later in the line describes what was NOT found, not
       // the total. Only a claim that opens with "no matches"/"zero" is a
@@ -361,14 +360,16 @@ if (!fs.existsSync(SOURCE_DIR)) {
 
       if (wantsZero) {
         if (hits === 0) {
-          console.log(`        ${card.padEnd(24)} "${term.slice(0,26)}" → still no matches`);
+                    ran++;
+console.log(`        ${card.padEnd(24)} "${term.slice(0,26)}" → still no matches in ${files.join(' ')}`);
         } else {
           fail(`${card} claims no matches for "${term}" — the source now has ${hits}. It is not a ghost.`);
           broken++;
         }
       } else if (n !== undefined) {
         if (hits === Number(n)) {
-          console.log(`        ${card.padEnd(24)} "${term.slice(0,26)}" → ${hits}, as claimed`);
+                    ran++;
+console.log(`        ${card.padEnd(24)} "${term.slice(0,26)}" → ${hits} in ${files.join(' ')}, as claimed`);
         } else {
           fail(`${card} claims ${n} for "${term}" — the source now has ${hits}.`);
           broken++;
