@@ -122,7 +122,9 @@ a question rather than asking the map about itself.
 lives in. Start there, not in the folder listing.
 
 `portability/` — two runs of the unedited `cartographer/` folder against
-libraries I did not write.
+libraries I did not write: `textstat/textstat`, mapped in full, and
+`koajs/ratelimit`, which the method refused under its own scope rule. Both
+published whole, refusal included.
 
 The reasoning behind all three is in `EVIDENCE.md`. It is not required to
 walk the map.
