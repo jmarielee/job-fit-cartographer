@@ -8,6 +8,13 @@ A fresh Claude project. Contents: this repository only. No conversation
 history, no prior context about Job Fit Scanner, no operator present in the
 conversation.
 
+**Note added 2026-08-25.** The walks were run in ChatGPT temporary chats,
+not a Claude project. A temporary chat carries no memory, no custom
+instructions, and no history from earlier walks, so it meets the cold-reader
+condition this section was written to describe. The setup line above was
+written before the first walk and is left as written rather than edited to
+match what happened.
+
 ## The prompt
 
 One question, pasted, and nothing else. No follow-up, no hints, no
