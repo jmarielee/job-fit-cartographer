@@ -3,7 +3,7 @@
 **Type:** threshold
 **State:** live · computed
 **Stage:** math
-**Source:** `scoring.js` — declared line 38, used in `_edgeVsGap`
+**Source:** `scoring.js:39` — declared at the top, used in `_edgeVsGap`
 
 ---
 

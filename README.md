@@ -142,10 +142,13 @@ Six checks:
 4. The demo score in `demo-data.md` is recomputed from the source by running
    the real scoring function. The card must state the number the code returns,
    not the number sitting in the demo data.
-5. Every threshold card's stated value is read out of `scoring.js` and
-   compared to what the card claims. `tie-factor.md` says 1.3; the source
-   declares 1.3 on line 39. If the source moves and the card doesn't, this
-   fails by name.
+5. Four of the seven threshold cards state a value declared as a bare
+   constant. Each of those four is read out of `scoring.js` and compared to
+   what the card claims. `tie-factor.md` says 1.3; the source declares 1.3
+   on line 39. If the source moves and the card doesn't, this fails by name.
+   The other three — `confidence-floor`, `verdict`, `vote-threshold` — state
+   bands, ranges and duplicated literals rather than single constants, and
+   are not keyed. The verifier names them when it runs.
 6. Every ghost card's proof search is re-run against the source and compared
    to what the card claims. A pasted search result is a photograph; this
    makes it a check. It caught two of my own cards the day it was written —
@@ -176,8 +179,26 @@ possible. Full shelves, single dose.
 
 ## Cold walks
 
-Recorded walks are in `walks/`, along with the corrections they forced. The
-protocol was written before they ran.
+Four walks, run cold. One failed.
+
+**`walks/walk-cold-cap-value.md` is the failure.** A reader with the README
+and the catalog and nothing else was asked why an application capped at 45.
+It found the right row, then answered from the catalog row alone and stated
+the rule wrong — it said one unmet required item caps the score. The code
+needs two or more: `scoring.js:137` tests `reqMiss >= 2`, and `:70-73` is
+what gets counted. The card was right the whole time; the catalog row had
+invited the reader to stop one file early. The row is rewritten, and the
+walk is kept as run. Logged as C15.
+
+That is the only evidence in this repo that a stranger, not the author,
+decided where the map was wrong. The other three walks passed:
+`walk-cold-vote-threshold.md`, `walk-cold-operator-ghost.md`,
+`walk-cold-cartographer-comprehension.md`.
+
+`walks/PROTOCOL.md` was written before any walk ran and lists five questions.
+Four were run. The unrun three are still listed rather than deleted.
+`walks/CORRECTIONS.md` indexes all sixteen corrections and says which file
+each lives in — start there, not in the folder listing.
 
 ## Portability
 

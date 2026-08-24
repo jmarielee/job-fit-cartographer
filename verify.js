@@ -296,6 +296,8 @@ if (!fs.existsSync(scoringPath)) {
   if (wrong === 0) pass(`${checked} threshold values match the source`);
   console.log('\n        Weights (TIER_W, CENT_W, STATUS_F, EDGE_BONUS) are objects, not');
   console.log('        single numbers, and are not keyed here. Their cards carry tables.');
+  console.log('        Not keyed: confidence-floor, verdict, vote-threshold — bands and');
+  console.log('        duplicated literals, not single constants. 4 of 7 threshold cards.');
 }
 
 /* ── CHECK 6 — every ghost proof re-run against the source ─────────────────

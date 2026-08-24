@@ -14,6 +14,9 @@ Five words in this territory carry more than one meaning. Read
 `operator/` and the root JS files disagree about how scoring works. Before
 trusting either, see `cards/operator-folder.md`.
 
+A cold reader once answered a question straight off this page and got the
+rule wrong. The row is not the card. See `../walks/walk-cold-cap-value.md`.
+
 ---
 
 ## 1 — LABELS · model-labeled

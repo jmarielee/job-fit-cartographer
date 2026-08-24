@@ -76,3 +76,10 @@ does not read `CAP_VALUE`.
 Change the constant and the Score Receipt — the section whose entire purpose
 is showing its work — keeps reporting the old number. Four thresholds have
 this drift. See `cards/score-receipt.md`.
+
+## Walked
+
+A cold reader was asked why an application capped at 45 and answered from
+the catalog row without opening this card. It got the count wrong. This card
+corrected it on the next turn. The row was rewritten, not the card — see
+`../../walks/walk-cold-cap-value.md` and C15.
