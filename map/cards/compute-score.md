@@ -3,7 +3,7 @@
 **Type:** function
 **State:** live
 **Stage:** 3 — MATH
-**Source:** `scoring.js:124–215`; called from `scoring.js:345` (real run) and `app.js:71` (demo)
+**Source:** `scoring.js:124–215`; called from `scoring.js:345` (real run) and `app.js:70` (demo)
 
 ## What it is
 
@@ -58,7 +58,7 @@ base is 100 (`gaps.total` is 0, so `gNorm` is 0) and the score would be 90 —
 a flawless verdict from no evidence at all. The floor catches it and returns
 **65, Viable but Exposed**. It is the only thing standing between a blank
 analysis and a strong one. Both call sites also guard with
-`if (jdItems && jdItems.length)` (`scoring.js:343`, `app.js:69`), so this is
+`if (jdItems && jdItems.length)` (`scoring.js:343`, `app.js:68`), so this is
 defence in depth, not dead code.
 
 **It also lifts genuinely bad candidates.** One missing core requirement plus a
@@ -71,8 +71,8 @@ rather than the candidate.
 ## Hits
 
 - Everything downstream. `survivabilityScore`, `verdict`, and `recommendation`
-  are assigned from its return at `scoring.js:346–348` and `app.js:72–74`.
-- `_brain`, attached at `scoring.js:350` / `app.js:75` — the sole source for the
+  are assigned from its return at `scoring.js:346–348` and `app.js:71–73`.
+- `_brain`, attached at `scoring.js:350` / `app.js:74` — the sole source for the
   gate flag (`render.js:278`), the cap note (`render.js:462`), and every row of
   the Score Receipt (`render.js:185–237`).
 - `confidenceLevel`, overwritten to `"low"` at `scoring.js:349` when the floor fires.
@@ -104,7 +104,7 @@ survivability score" (`scoring.js:224`). For the **score**, that holds exactly �
 nothing from the cynical narrative mode reaches lines 128–169.
 
 For the **recommendation**, it does not. Both call sites derive the vote from
-`evaluator.score` (`scoring.js:344`, `app.js:71`), and those scores are Mode 2
+`evaluator.score` (`scoring.js:344`, `app.js:69`), and those scores are Mode 2
 output — written in the adversarial voice alongside the objections and gut
 takes. That vote reaches `:184` and `:186`. So a cynical evaluator score cannot
 move the number, but it can move `Apply` to `Apply with Caution`, and below 55
