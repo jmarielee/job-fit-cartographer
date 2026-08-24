@@ -109,7 +109,7 @@ It is not display. It is a stage, and it is the stage where the
 human-in-the-loop actually lives.
 
 **Resolution:** catalog rebuilt with six stages. Ledger promoted to its own
-group with six cards.
+group with two cards — the two ghosts it left behind.
 
 ---
 
