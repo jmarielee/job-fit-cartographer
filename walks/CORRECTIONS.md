@@ -122,11 +122,11 @@ standalone site. The spec stayed put and the implementation moved.
 That lineage is now stated at the top of `catalog.md`, because a reader who
 does not know it will trust the wrong file every time.
 
-The corrections that follow — C10, C11, C12 — have a different root cause,
+The corrections that follow — C12, C13, C14 — have a different root cause,
 and it is not the territory. It is this map trusting a derivation over a
 lookup.
 
-## C10 — benchmark-evaluator.md undercounted its own proof
+## C12 — benchmark-evaluator.md undercounted its own proof
 
 **Claimed:** the search for "benchmark" returns 6 matches.
 
@@ -145,7 +145,7 @@ sloppy about how many things it had ruled out.
 
 ---
 
-## C11 — ledger-state-layer.md miscounted, and the first correction was worse
+## C13 — ledger-state-layer.md miscounted, and the first correction was worse
 
 **Claimed:** 11 hits, all between `render.js:600` and `render.js:677`.
 
@@ -161,7 +161,7 @@ from a list of line numbers without opening the lines.
 
 
 
-## C12 — compute-score.md cited five app.js lines it never opened
+## C14 — compute-score.md cited five app.js lines it never opened
 
 **Claimed:** `computeScore` is called from `app.js:71`; the guard is at
 `app.js:69`; the assignments are `app.js:72–74`; `_brain` is attached at
@@ -208,7 +208,7 @@ and Check 3's `?` count went to zero.
 
 **What this says about the map.** This is the fourth correction in this log
 written from line numbers that were reasoned about rather than read — C1,
-C5, C11, and now this one. The pattern is not carelessness about which file;
+C5, C13, and now this one. The pattern is not carelessness about which file;
 every one of these citations named the right file and described the right
 behaviour. The pattern is trusting a derivation over a lookup. Check 3 exists
 because of it, and Check 3 caught one in five. That ratio is the honest

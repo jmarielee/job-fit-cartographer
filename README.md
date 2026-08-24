@@ -142,7 +142,7 @@ Six checks:
 6. Every ghost card's proof search is re-run against the source and compared
    to what the card claims. A pasted search result is a photograph; this
    makes it a check. It caught two of my own cards the day it was written —
-   see C10 and C11 in `walks/`.
+   see C12 and C13 in `walks/`.
 
 
 Checks 4, 5 and 6 are the only ones keyed against something other than the
@@ -157,7 +157,7 @@ The verifier has caught real errors in this map, and readers have caught
 errors the verifier could not. Two days before submission, five citations on
 the densest card pointed at lines that existed, in the right file, describing
 the right behaviour, and were still wrong. Check 3 flagged one of the five —
-see C12.
+see C14.
 
 Those corrections are logged in `walks/`. Failures are not hidden: a verifier
 that has never failed has not been tested.
