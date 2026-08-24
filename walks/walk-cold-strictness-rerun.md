@@ -15,55 +15,67 @@ Pass condition: all four from PROTOCOL.md.
 
 ## Transcript
 
-Answer only from the two files provided. Do not browse or use any other source. If those files don't contain the answer, say what you'd need.
-I want the Job Fit Scanner to be harder to score well on. What do I change?
+For the running Job Fit Scanner, change `scoring.js`. The map puts the
+relevant levers in Math → Guards → Verdict, and warns that `operator/` is
+not what the running app reads in the mapped version.
 
-From these two files, the safest answer is: tighten the numerical guards and/or the scoring weights—not TIE_FACTOR if you want the score itself to go down.
+If by "harder to score well" you mean high numeric scores are too easy, I'd
+start with this calibration:
 
-The strongest levers identified in the catalog are:
+    const STATUS_F = { missing: 1.0, partial: 0.65, meets: 0.0 };
+    // was partial: 0.5
 
-REALISM_CEIL — “nothing is ever a sure thing.” Lowering this ceiling would make very high scores harder to achieve.
-CAP_VALUE — another score ceiling triggered by particular conditions. Lowering its value and/or making its triggering conditions easier to hit would make the scanner harsher. But these files explicitly say the count and conditions are on the missing card, so I can’t tell you exactly what to edit.
-GATE_CORE_CEIL — caps the score when a core gate is active. Lowering it would penalize gated candidates more aggressively.
-TIER_W, CENT_W, and STATUS_F — these directly scale the computed score for required/preferred items, centrality, and gap status. They are genuine scoring weights rather than decision thresholds. The README confirms these coefficients “scale a number.”
+    const EDGE_BONUS = { core: 8, supporting: 4, peripheral: 0, none: 0 };
+    // was core: 12, supporting: 6
 
-If what you really want is fewer people getting an “Apply” recommendation, there is a separate lever: raise TIE_FACTOR. The README gives a concrete example: changing it from 1.3 to 1.6 leaves every numerical score unchanged, but makes a clean “Apply” less common and “Apply with Caution” more common.
+    const REALISM_CEIL = 85;
+    // was 90
 
-You could also make the upstream model labeling stricter through systemPrompt, because the model assigns labels such as required/preferred, centrality, meets/partial/missing, obtainable, and mapsToNeed, which then feed the deterministic math. The files provided don’t contain the actual prompt, though, so I can’t say what wording to change.
+Those three changes attack different sources of generosity. `STATUS_F.partial`
+makes "sort of meets it" hurt more; this flows directly into normalized gap
+mass and therefore lowers the base score. `EDGE_BONUS` currently gives up to
+12 points of headroom-based rescue for a core strength, so reducing it
+prevents one standout strength from compensating as much for gaps.
+`REALISM_CEIL` simply makes 86–90 impossible. ([GitHub](https://github.com/jmarielee/job-fit/blob/main/scoring.js))
 
-One important warning: don’t edit operator/ expecting the running scanner to change. The catalog says the running system does not read that folder, and the README calls it leftover scoring rules that the app cannot read.
+I wouldn't start by changing `TIER_W` or `CENT_W`. Because those weights
+appear in both gap mass and the denominator used to normalize it, changing
+them recalibrates which requirements matter relative to one another rather
+than simply making the system stricter. ([GitHub](https://github.com/jmarielee/job-fit/blob/main/scoring.js))
 
-So, based only on these files, I’d prioritize lowering the relevant ceilings and adjusting TIER_W / CENT_W / STATUS_F for a genuinely harder numerical score. To tell you the exact constants, directions, and recommended new values, I’d need the referenced cards—especially realism-ceil.md, cap-value.md, gate-core-ceil.md, tier-w.md, cent-w.md, status-f.md, and probably system-prompt.md.
+If instead the problem is too many people get "Apply" even when the score
+looks reasonable, use the governance levers:
 
-cap-value.md
-File
-gate-core-ceil.md
-File
-realism-ceil.md
-File
+    const TIE_FACTOR = 1.5; // was 1.3
 
-With these three cards, I’d change REALISM_CEIL first if your goal is specifically “make high scores harder to earn.”
+and consider raising the recommendation floor from `55` to `60`:
 
-REALISM_CEIL is currently 90 and is a hard ceiling on every score. Lowering it compresses the top end and pushes strong candidates toward the 75-point “Viable but Exposed” boundary.
+    if (score >= 60) {
+      recommendation =
+        (vote.apply >= 2 && evg === 'edge')
+          ? 'Apply'
+          : 'Apply with Caution';
+    }
 
-A useful way to think about the three knobs:
+`TIE_FACTOR` is especially clean because it makes "strengths dominate gaps"
+harder to achieve without changing the score at all—exactly the distinction
+your map calls out. The current code requires score ≥55, 2+ positive
+evaluator votes, and edge dominance for a clean Apply. ([GitHub](https://github.com/jmarielee/job-fit/blob/main/scoring.js))
 
-Change	Effect
-Lower REALISM_CEIL from 90	Makes excellent matches score less well across the board. Best general-purpose “harder scanner” lever.
-Lower CAP_VALUE from 45 → 44	Much harsher specifically when 2+ core/supporting required items are missing and unobtainable. It also flips every capped case from potentially “Apply with Caution” to “Do Not Apply.”
-Lower GATE_CORE_CEIL from 74	Punishes a candidate with one missing core required gate more heavily. The card explicitly warns that lowering it substantially starts duplicating CAP_VALUE.
+For harsher treatment of obvious weaknesses, you can also tighten the
+guardrails:
 
-So I would not start by lowering GATE_CORE_CEIL. Its current 74 is deliberately one point below the 75 “Strong Candidate” boundary: it prevents someone with a live core screen-out from being called strong without turning that single gap into a disqualification.
+    const CAP_VALUE = 40;       // was 45
+    const GATE_CORE_CEIL = 69;  // was 74
 
-For CAP_VALUE, be aware that 45 is structurally coupled to the recommendation logic. Changing it to 44 is not a small one-point tightening: according to the card, it makes every application caught by that cap become “Do Not Apply.” Also, if you change it, the Score Receipt has a hard-coded "required-gate cap 45" string that will become stale unless that display is changed too.
+That won't affect ordinary candidates. `CAP_VALUE` only bites when there are
+2+ missing, non-obtainable required core/supporting qualifications;
+`GATE_CORE_CEIL` only bites when there's a missing required core gate. ([GitHub](https://github.com/jmarielee/job-fit/blob/main/scoring.js))
 
-My change order from the supplied files would therefore be:
-
-Lower REALISM_CEIL to make the overall scoring distribution stricter.
-If missing required qualifications are currently being treated too generously, consider CAP_VALUE: 45 → 44, knowing that this intentionally causes a recommendation cliff.
-Leave GATE_CORE_CEIL at 74 unless you specifically want one missing core requirement to carry substantially more punishment.
-
-The files don’t give a tested alternative value for REALISM_CEIL, so I can’t justify saying “set it to 85” or “set it to 80” from the provided evidence alone. To choose that number intelligently, I’d need either the scoring-weight cards (TIER_W, CENT_W, STATUS_F, EDGE_BONUS) or some representative score outputs showing what currently scores too highly.
+My recommended first pass: `partial: .5 → .65`, bonuses `12/6 → 8/4`, and
+`TIE_FACTOR 1.3 → 1.5`. Leave the hard caps alone initially. That should
+make an 80+ meaningfully rarer and a clean Apply more demanding, without
+turning every borderline candidate into an automatic rejection.
 
 ## Every technical claim was correct
 
