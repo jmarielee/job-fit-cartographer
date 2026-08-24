@@ -55,7 +55,7 @@ trusting either, see `cards/operator-folder.md`.
 | Noun | What it is | State | Card |
 |---|---|---|---|
 | REALISM_CEIL | nothing is ever a sure thing | live | [cards/realism-ceil.md](cards/realism-ceil.md) |
-| CAP_VALUE | ceiling when required items unmet | live | [cards/cap-value.md](cards/cap-value.md) |
+| CAP_VALUE | ceiling; count and conditions on the card | live | [cards/cap-value.md](cards/cap-value.md) |
 | GATE_CORE_CEIL | ceiling when a core gate is live | live | [cards/gate-core-ceil.md](cards/gate-core-ceil.md) |
 | confidence floor | clamp when inputs are thin | live | [cards/confidence-floor.md](cards/confidence-floor.md) |
 | guard numbering | code and spec number them differently | drift | [cards/guard-numbering.md](cards/guard-numbering.md) |
