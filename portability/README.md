@@ -154,21 +154,49 @@ by `Proof of absence`" for ghost cards. Two of my four instruction files
 gave opposite instructions. Neither of my earlier cold walks caught it.
 `rules.md` now names the exception and points at `card-types.md`.
 
-## Citation corrections made to the runs
+### Citation corrections made to the runs
 
-Both runs are published as produced, with two citation errors corrected and
-noted here rather than silently:
+Both runs are published as produced. Run 2 shipped with two citation errors
+and run 1 with nine, corrected here rather than silently.
 
-- Run 2 cited `README.md:176-178` for textstat's SMOG sentence-minimum
-  claim. The claim is at `README.md:192-193`; 176-178 is the Gunning Fog
-  section.
-- Run 2 cited `textstat.py:915-946` for the 1–18 grade clamp. The clamp is
-  at `textstat.py:1004`.
+**Run 2 — two.**
 
-Both were caught by opening the cited lines. That is the same failure class
-my own C1, C5 and C11 record, appearing in a cold session's output, and it
-is the reason `verify.js` Check 3 prints the source line beside every claim
-instead of testing whether the line exists.
+- Cited `README.md:176-178` for textstat's SMOG sentence-minimum claim. The
+  claim is at `README.md:192-193`; 176-178 is the Gunning Fog section.
+- Cited `textstat.py:915-946` for the 1–18 grade clamp. The clamp is at
+  `textstat.py:1004`.
+
+**Run 1 — nine.** Every finding survived; only the numbers were wrong.
+
+- `index.js:103`, cited eight times as where the verdict reads `remaining`,
+  is a blank line. The read is `index.js:108`.
+- `index.js:113` for the `status` option is `opts.errorMessage ||`. The
+  option is set at `index.js:119`.
+- `index.js:52-56` for the `opts.headers` destructure starts two lines early
+  and stops before the line that names `opts.headers`. It is `54-58`.
+- `index.js:47` for the `onLimited` default is `total: 'X-RateLimit-Limit'`.
+  The default is `:49`.
+- `index.js:115` for the `onLimited` call is blank. The call is `:121`.
+- `index.js:86` for where `calls` is derived is a comment. The derivation is
+  `:90`.
+- Three ranges cited for koajs's Options list — `README.md:109-123`,
+  `117-120`, `118-120` — land inside code examples and fences. The Options
+  list is `README.md:121-137`; the three peer bullets are `132-134`.
+- `README.md:40-44` and `83-87` for the nested `headers` blocks are the
+  wrong offsets. They are `47-51` and `93-97`.
+- `README.md:53-55` for the `onLimited` example is `disableHeader` and
+  `whitelist`. The block is `60-62`.
+
+**Why run 1 was worse, and what that measures.** `verify.js` Check 3 reads
+only `map/cards/`. Neither portability territory is vendored into this repo,
+so nothing ever printed these lines beside their claims. I opened all of them
+by hand before submission.
+
+That is the failure class my own C1, C5 and C13 record, in my own writing, in
+the one folder my own checker cannot reach. It is the sharpest available
+statement of what Check 3 is worth: inside its reach, five citations were
+wrong and it flagged one. Outside its reach, nine were wrong and nothing
+flagged any.
 
 ---
 
