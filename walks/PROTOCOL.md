@@ -85,3 +85,7 @@ All four must hold.
 Screen capture, unedited, start to finish. Failures are published. A walk
 that fails is not re-run and relabelled — it is kept, and the fix it forced
 is noted underneath.
+
+**Note added 2026-08-25 — recording.** The walks are published as pasted
+transcripts, not screen captures. The line above was written before the first
+walk and is left as written rather than edited to match what happened.

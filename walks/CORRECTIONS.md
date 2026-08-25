@@ -3,8 +3,9 @@
 Recorded as they happened. Not cleaned up after.
 
 The protocol in `PROTOCOL.md` requires that a ghost be proven by search
-rather than asserted. Running those searches corrected four of my own
-claims. Three were mine; one was a card I had already written.
+rather than asserted. Running those searches is what produced C1 through
+C4. The rest came from cold walks, from the verifier, and from reading
+lines I had previously only reasoned about.
 
 ---
 

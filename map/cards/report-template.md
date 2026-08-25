@@ -2,7 +2,7 @@
 
 **Type:** leftover
 **State:** leftover
-**Stage:** display
+**Stage:** spec folder
 **Source:** `operator/report-template.md` — last modified 2026-06-13
 
 ---

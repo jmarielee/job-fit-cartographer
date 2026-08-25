@@ -1,7 +1,7 @@
 # mapsToNeed
 
 **Type:** object
-**State:** live filter · unreachable branch
+**State:** live
 **Stage:** labels · model-labeled
 **Source:** schema at `scoring.js:302`; filtered in `_computeStrength`, `scoring.js:62`
 
