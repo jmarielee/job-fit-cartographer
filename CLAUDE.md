@@ -9,7 +9,8 @@ Open that one card. Stop. Do not load `map/cards/` wholesale.
 in this territory carry more than one meaning.
 
 **To use the cartographer on a different body of work:** `cartographer/`.
-Start with `identity.md` to check the territory is in scope.
+That folder travels on its own and has its own front door —
+`cartographer/README.md`. Start there.
 
 **To check the map against its source:** `node verify.js` from the repo root.
 
