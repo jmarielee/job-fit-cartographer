@@ -17,6 +17,10 @@ trusting either, see `cards/operator-folder.md`.
 A cold reader once answered a question straight off this page and got the
 rule wrong. The row is not the card. See `../walks/walk-cold-cap-value.md`.
 
+This page is the reconciled inventory — sweep 4 of the four in
+`../cartographer/rules.md`. The sweeps themselves are recorded in
+`INVENTORY.md`. Nothing was dropped for being uninteresting.
+
 ---
 
 ## 1 — LABELS · model-labeled
