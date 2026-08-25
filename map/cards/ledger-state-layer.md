@@ -21,7 +21,9 @@ The state layer behind the Evidence Ledger.
 ```
 grep -n "RUN\b\|applyLedgerEdit\|ledgerScore\|LAST_REPORT" scoring.js render.js app.js index.html
 → 14 hits, zero declarations
-  render.js   600, 638, 645, 647, 652, 660, 665, 667, 673, 677  (10 — real references)
+  render.js   600, 638, 665, 667, 673, 677  (6 — real references)
+  render.js   645, 647, 652, 660  (4 — DOM id strings, same substring
+              match as the index.html four below. Not references.)
   index.html  146, 148, 149, 151  (4 — element ids: ledgerScorebar,
               ledgerScoreNum, ledgerScoreVerdict, ledgerScoreNote. The search
               matches these on the substring `ledgerScore`. Markup, not code.

@@ -154,7 +154,7 @@ by `Proof of absence`" for ghost cards. Two of my four instruction files
 gave opposite instructions. Neither of my earlier cold walks caught it.
 `rules.md` now names the exception and points at `card-types.md`.
 
-### Citation corrections made to the runs
+## Citation corrections made to the runs
 
 Both runs are published as produced. Run 2 shipped with two citation errors
 and run 1 with nine, corrected here rather than silently.
