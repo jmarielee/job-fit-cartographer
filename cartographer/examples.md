@@ -58,6 +58,7 @@ A reader who wants a stricter tool reaches for the wrong one.
 The proof, which is the part that is not optional:
 
 ```
+cd territory
 grep -rn "operator/" render.js app.js index.html scoring.js
 → no matches
 ```

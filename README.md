@@ -82,6 +82,12 @@ nothing currently reaches them. The largest of those is `operator/`, a folder
 of scoring rules the running app cannot read. A reader who edits it will see
 nothing change.
 
+**Where the proofs run.** Every search printed on a card is written from the
+territory root. Run them from `territory/`, not from the repo root:
+`cd territory && grep -rn "operator/" render.js app.js index.html scoring.js`
+returns nothing, as the card claims. `node verify.js` re-runs them for you
+from the repo root and resolves the paths itself.
+
 Ghost and leftover are not the same claim, and the catalog marks which is
 which. Ghost cards are filed in the section where you would expect the thing
 to be working, not in a pile at the bottom. Each one carries the search that
