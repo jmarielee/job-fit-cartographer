@@ -1,10 +1,10 @@
 # Cartographer — Job Fit Scanner
 
-A folder-based cartographer. Drop it into a Claude project, point it at a
-body of work, and it leaves a map a cold reader can enter without reading
-the whole thing.
+A folder-based cartographer. Drop `cartographer/` into a Claude project,
+point it at a body of work, and it leaves a map a cold reader can enter
+without reading the whole thing.
 
-This repo contains three things. Do not confuse them.
+Three folders here are easy to confuse. Do not confuse them.
 
 - **The cartographer** — `cartographer/`. Instructions for making maps, plus
   this territory's naming collisions and one worked example.
@@ -12,6 +12,9 @@ This repo contains three things. Do not confuse them.
 - **A pinned copy of the territory** — `territory/`. A frozen, read-only
   snapshot at commit 9ce4511 so `node verify.js` runs on a bare clone with
   no setup. Not modified by the map. See `territory/PINNED.md`.
+
+`walks/`, `portability/`, `EVIDENCE.md` and `verify.js` are the record of
+how this was tested. None of them is required to walk the map.
 
 ---
 
