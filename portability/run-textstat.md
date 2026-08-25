@@ -36,7 +36,7 @@ recorded rather than silently fixed:
   at `textstat.py:1004`.
 
 Both were found by opening the cited lines rather than trusting them — the
-same procedure that produced corrections C1, C5 and C11 against my own map.
+same procedure that produced corrections C1, C5 and C13 against my own map.
 
 ## What the run found, verified against source
 
