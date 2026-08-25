@@ -4,11 +4,14 @@ A folder-based cartographer. Drop it into a Claude project, point it at a
 body of work, and it leaves a map a cold reader can enter without reading
 the whole thing.
 
-This repo contains two things. Do not confuse them.
+This repo contains three things. Do not confuse them.
 
 - **The cartographer** — `cartographer/`. Instructions for making maps, plus
   this territory's naming collisions and one worked example.
 - **The map it made** — `map/`. One worked map of the Job Fit Scanner repo.
+- **A pinned copy of the territory** — `territory/`. A frozen, read-only
+  snapshot at commit 9ce4511 so `node verify.js` runs on a bare clone with
+  no setup. Not modified by the map. See `territory/PINNED.md`.
 
 ---
 
