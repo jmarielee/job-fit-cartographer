@@ -100,7 +100,7 @@ Also does not hit:
 ## The one leak
 
 The system prompt claims Mode 1 (neutral labelling) "drives the computed
-survivability score" (`scoring.js:224`). For the **score**, that holds exactly —
+survivability score" (`scoring.js:223`). For the **score**, that holds exactly —
 nothing from the cynical narrative mode reaches lines 128–169.
 
 For the **recommendation**, it does not. Both call sites derive the vote from

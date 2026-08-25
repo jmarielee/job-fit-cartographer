@@ -12,7 +12,7 @@ confidently is the most likely failure in this map.
    candidate out before a human weighs the whole picture.
    `scoring.js` — `_identifyGate`.
 2. **the required-gate cap** — Guard 1. An unrelated mechanism that clamps
-   the score when two or more core required items are unmet.
+   the score when two or more required core/supporting items are unmet.
    `scoring.js` — `CAP_VALUE`.
 3. **accessGate** — a DOM element. The API-key entry box on the page.
    `index.html`.
@@ -31,7 +31,8 @@ wrong constant.
 3. **evaluators[].confidenceLevel** — a narrative field each of the three
    evaluators writes about their own read.
 
-1 is math. 2 and 3 are prose. Changing 1 does not change 2 or 3.
+1 is math. 2 and 3 are prose. But 1 overwrites 2 when it fires
+(`scoring.js:349`), which is the link readers miss. It never touches 3.
 
 ---
 
@@ -39,8 +40,9 @@ wrong constant.
 
 1. **survivabilityScore** — the final computed number shown to the user.
    Requested from the model and then overwritten by `computeScore`.
-2. **evaluators[].score** — a per-evaluator number the model assigns, used
-   only to derive an apply/skip lean.
+2. **evaluators[].score** — a per-evaluator number the model assigns. The
+   math reads it only to derive an apply/skip lean at 55; the display reads
+   the same number at 65/50 for the badge. See `map/cards/vote-threshold.md`.
 3. **base** — the score before bonus, caps, and floors.
 
 ---

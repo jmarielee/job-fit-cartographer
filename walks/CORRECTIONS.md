@@ -9,9 +9,9 @@ lines I had previously only reasoned about.
 
 ---
 
-## Index — all sixteen, and where they live
+## Index — all nineteen, and where they live
 
-Sixteen corrections across three files, numbered in the order they were
+Nineteen corrections across three files, numbered in the order they were
 found rather than the order they are filed. C13 is a correction of a
 correction: the first fix was worse than the error.
 
@@ -33,6 +33,9 @@ correction: the first fix was worse than the error.
 | C14 | compute-score.md cited five app.js lines it never opened | `CORRECTIONS.md` |
 | C15 | the catalog answered a question it should have pointed at | `CORRECTIONS.md` |
 | C16 | four coefficients typed as thresholds | `CORRECTIONS.md` |
+| C17 | two cards cited a blank line for a sentence one line up | `CORRECTIONS.md` |
+| C18 | two cards cited 656–657 for constants at 655–656 | `CORRECTIONS.md` |
+| C19 | collisions.md contradicted three cards that were right | `CORRECTIONS.md` |
 
 ## C1 — "Guard 2 is missing" — WRONG
 
@@ -322,3 +325,80 @@ coefficients belong, and names the deeper gap it does not fix: `ghost` and
 **What this cost.** The headline number went from eleven to seven. The type
 is stronger for it: a governance type that admits coefficients is not a
 governance type.
+
+---
+
+## C17 — two cards cited a blank line
+
+**Claimed:** the system prompt's Mode 1 instruction "drives the computed
+survivability score" at `scoring.js:224`. Written that way in
+`map/cards/compute-score.md` and again in `CORRECTIONS-addendum.md` inside
+C11.
+
+**What corrected it:** reading the line instead of the range.
+
+```
+scoring.js:224 → (empty)
+scoring.js:223 → ...This is the instruction that drives the computed
+                 survivability score.
+```
+
+**Fixed.** Both now cite `:223`.
+
+**What it means.** `verify.js` Check 3 passed this every run. 224 is inside
+`scoring.js`, so the check that proves a citation sits in its file cannot
+see it. This is C14's class again — a line number that was reasoned to
+rather than read — and it survived the pass that fixed C14 because that pass
+looked at `app.js` only.
+
+---
+
+## C18 — two cards cited the wrong two lines for the same pair of constants
+
+**Claimed:** `updateLedgerPreview` interpolates `CAP_VALUE` and
+`GATE_CORE_CEIL` at `render.js:656–657`. Written that way in
+`map/cards/score-receipt.md` and in `map/cards/ledger-state-layer.md`.
+
+**What corrected it:**
+
+```
+grep -n "CAP_VALUE\|GATE_CORE_CEIL" render.js
+→ 655:  if (brain.capped)     notes.push(`⬡ ${CAP_VALUE}-cap engaged — ...`);
+→ 656:  if (brain.gateCapped) notes.push(`⬡ ${GATE_CORE_CEIL} core-gate ...`);
+```
+
+657 contains neither. It is the live-gate note.
+
+**Fixed.** Both now cite `655–656`.
+
+**What it means.** One error in two files, so the two cards were written from
+a shared note rather than from the source each time. Off by one in the
+direction that keeps the range plausible, which is the direction Check 3
+cannot catch.
+
+---
+
+## C19 — the file that exists to prevent confident wrong answers was the wrongest file in the map
+
+**Claimed:** three entries in `cartographer/reference/collisions.md`.
+
+1. "gate" — the required-gate cap fires "when two or more **core** required
+   items are unmet." `scoring.js:71` counts `core` **or** `supporting`.
+   `cap-value.md` and `operator/rules.md:32` both state it correctly.
+2. "confidence" — "Changing 1 does not change 2 or 3." `scoring.js:349` is
+   `if (_b.lowConfidence) parsedData.confidenceLevel = "low";` — the floor
+   overwrites 2. `confidence-floor.md` lists exactly this under **Hits**.
+3. "score" — `evaluators[].score` is "used **only** to derive an apply/skip
+   lean." `render.js:297` and `:495` pass the same number to `evalVerdict`,
+   which bands it at 65/50 for the committee badge. `vote-threshold.md`
+   makes that its whole point.
+
+**Fixed.** All three rewritten against the source.
+
+**What it means.** In every case the card was right and the collisions file
+was wrong, which is the worst possible direction: `walk-order.md` routes a
+reader to collisions.md *before* the card, on exactly the words "gate",
+"confidence" and "score". Item 1 is C15's error surviving in a second
+location — the catalog row was rewritten after the cold walk and this file
+was not re-read. The file was written early and never re-checked against the
+cards it feeds.

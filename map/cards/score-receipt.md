@@ -60,7 +60,7 @@ displayed numbers can drift from the running ones.
 
 ## Contrast worth noting
 
-`updateLedgerPreview` at `render.js:656–657` does this correctly —
+`updateLedgerPreview` at `render.js:655–656` does this correctly —
 `${CAP_VALUE}` and `${GATE_CORE_CEIL}`, read from the constants.
 
 The dead code is right. The live code is stale. A reader who copies the

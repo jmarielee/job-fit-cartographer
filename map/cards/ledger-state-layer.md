@@ -42,7 +42,7 @@ function that would produce it. The markup outlived the state layer.
 These read as globals defined in a file the reader hasn't opened yet. That
 is a reasonable assumption in a three-script page with shared globals —
 `CAP_VALUE` and `GATE_CORE_CEIL` genuinely do work that way, declared in
-`scoring.js` and used in `render.js:656–657`.
+`scoring.js` and used in `render.js:655–656`.
 
 So the pattern is real. These four just aren't part of it.
 

@@ -138,7 +138,7 @@ asserting it.
 adversarial voice entirely out of anything computed.
 
 The prompt says Mode 1 "drives the computed survivability score"
-(`scoring.js:224`). That sentence is exactly true. I read it as broader than it
+(`scoring.js:223`). That sentence is exactly true. I read it as broader than it
 is written.
 
 Nothing from Mode 2 reaches `scoring.js:128–169`. The score is clean.
