@@ -96,7 +96,7 @@ Walking an ordinary, non-whitelisted request through the actual middleware gives
 4. Select memory or Redis implementation — `index.js:72-79`.
 5. Ask the selected limiter for its current counter state — `index.js:83`.
 6. Derive the displayed remaining-call count and headers — `index.js:86-99`.
-7. Gate downstream execution on the limiter's `remaining` value — `index.js:103`.
+7. Gate downstream execution on the limiter's `remaining` value — `index.js:108`.
 8. If blocked, derive retry timing/message/state/status, run `onLimited`, optionally throw — `index.js:104-118`. ([GitHub][2])
 
 For memory storage, step 5 expands into “find entry → decide expired/missing → initialize or decrement → return state,” `limiter/memory.js:45-67`. ([GitHub][3])
@@ -119,12 +119,12 @@ For the central behavior, these states are supportable:
 | `duration`               | live      | default `index.js:39`; memory reset consumes it `limiter/memory.js:41,49-52`                                                                           |
 | memory limiter           | live      | selected `index.js:73-75`; its `get` result is consumed `index.js:83`                                                                                  |
 | Redis limiter boundary   | live      | selected `index.js:77-79`; implementation delegated at `limiter/redis.js:1`                                                                            |
-| `limit.remaining`        | live      | memory produces/updates it `limiter/memory.js:55-65`; verdict reads it `index.js:103`                                                                  |
-| `calls`                  | live      | derived `index.js:86`; used for response header `index.js:90-99`                                                                                       |
-| header-name option shape | **drift** | README presents `remaining/reset/total` beside top-level options `README.md:118-120`; code actually reads them inside `opts.headers`, `index.js:52-56` |
-| `status` option          | **drift** | runtime reads it at `index.js:113`; API Options list `README.md:109-123` does not name it                                                              |
+| `limit.remaining`        | live      | memory produces/updates it `limiter/memory.js:55-65`; verdict reads it `index.js:108`                                                                  |
+| `calls`                  | live      | derived `index.js:90`; used for response header `index.js:90-99`                                                                                       |
+| header-name option shape | **drift** | README presents `remaining/reset/total` beside top-level options `README.md:132-134`; code actually reads them inside `opts.headers`, `index.js:54-58` |
+| `status` option          | **drift** | runtime reads it at `index.js:119`; API Options list `README.md:121-137` does not name it                                                              |
 | `throw`                  | live      | read after rate-limit verdict `index.js:116-118`; behavior tested `test/memory.spec.js:103-135`                                                        |
-| `onLimited`              | live      | defaulted `index.js:47`, invoked `index.js:115`, shown in Redis example `README.md:53-55`                                                              |
+| `onLimited`              | live      | defaulted `index.js:49`, invoked `index.js:121`, shown in Redis example `README.md:60-62`                                                              |
 
 The two drift calls are not cosmetic. The README examples correctly nest header-name settings, while its Options section lists the three names at the same bullet level as top-level settings. ([GitHub][5]) `status` is an actual runtime option but is absent from that Options section. ([GitHub][2])
 
@@ -269,7 +269,7 @@ The catalog itself obeys the four-column restriction and is grouped by the deriv
 
 **Why it is shaped this way:** It is the primary human-chosen policy boundary controlling when the limiter stops permitting downstream execution.
 
-**What it gates:** Whether stored remaining capacity eventually reaches the blocked state read by `index.js:103`.
+**What it gates:** Whether stored remaining capacity eventually reaches the blocked state read by `index.js:108`.
 
 **What moves when it moves:** The number of requests an identity can get through during a window; memory initial `remaining` and `total` also move because both originate from `max`, `limiter/memory.js:55-60`.
 
@@ -355,7 +355,7 @@ This card exposes a substantive method failure: it can tell a cold reader **wher
 
 **Why it is shaped this way:** Both storage implementations present a common state interface to the middleware.
 
-**Hits:** The central downstream-execution verdict at `index.js:103`; it also feeds calculation of the displayed remaining count at `index.js:86`.
+**Hits:** The central downstream-execution verdict at `index.js:108`; it also feeds calculation of the displayed remaining count at `index.js:90`.
 
 **Does not hit:** **Wrong neighbour — `calls`.** `calls` is derived from this value, but the gate does not read `calls`.
 
@@ -391,13 +391,13 @@ This card is another place the method transfers well: mandatory “Does not hit�
 
 **Why it is shaped this way:** Runtime groups the three names under one header configuration object.
 
-**Hits:** The names used when the middleware emits remaining/reset/total headers. Runtime source: `index.js:52-56,90-99`.
+**Hits:** The names used when the middleware emits remaining/reset/total headers. Runtime source: `index.js:54-58,90-99`.
 
 **Does not hit:** **Wrong neighbour — `limit.remaining`.** Renaming the response field called “remaining” does not alter the numeric counter or the verdict.
 
-**Drift proof:** The examples nest the names under `headers`, `README.md:40-44,83-87`; the Options list presents `remaining`, `reset`, and `total` as peer bullets after `headers`, `README.md:117-120`; runtime reads them from `opts.headers`, `index.js:52-56`.
+**Drift proof:** The examples nest the names under `headers`, `README.md:47-51,83-87`; the Options list presents `remaining`, `reset`, and `total` as peer bullets after `headers`, `README.md:132-134`; runtime reads them from `opts.headers`, `index.js:54-58`.
 
-**Source:** `README.md:40-44,83-87,117-120`; `index.js:52-56,90-99`. ([GitHub][5])
+**Source:** `README.md:47-51,83-87,117-120`; `index.js:54-58,90-99`. ([GitHub][5])
 
 ---
 
@@ -410,13 +410,13 @@ This card is another place the method transfers well: mandatory “Does not hit�
 
 **Why it is shaped this way:** It lets callers alter response semantics without changing the limiter's allow/block calculation.
 
-**Hits:** The blocked response's status and, when throwing is enabled, the status supplied to the thrown Koa error. Source: `index.js:113,116-118`.
+**Hits:** The blocked response's status and, when throwing is enabled, the status supplied to the thrown Koa error. Source: `index.js:116-119`.
 
-**Does not hit:** **Wrong neighbour — `limit.remaining`.** Changing status cannot make a blocked request permissible; the blocking conclusion has already occurred at `index.js:103`.
+**Does not hit:** **Wrong neighbour — `limit.remaining`.** Changing status cannot make a blocked request permissible; the blocking conclusion has already occurred at `index.js:108`.
 
-**Drift proof:** Runtime reads `status`, `index.js:113`; the public Options list runs from `README.md:109-123` without listing `status`.
+**Drift proof:** Runtime reads `status`, `index.js:119`; the public Options list runs from `README.md:121-137` without listing `status`.
 
-**Source:** `index.js:103,113,116-118`; `README.md:109-123`. ([GitHub][2])
+**Source:** `index.js:108,116-119`; `README.md:121-137`. ([GitHub][2])
 
 ---
 
@@ -433,7 +433,7 @@ This card is another place the method transfers well: mandatory “Does not hit�
 
 **Does not hit:** **Wrong neighbour — the rate-limit verdict.** `throw` is checked only after `limit.remaining` has already denied downstream execution. Turning it on cannot make an otherwise allowed request become rate-limited.
 
-**Source:** `index.js:103,110-118`; `test/memory.spec.js:103-135`. ([GitHub][2])
+**Source:** `index.js:108,110-119`; `test/memory.spec.js:103-135`. ([GitHub][2])
 
 # Where the method does and doesn't fit
 

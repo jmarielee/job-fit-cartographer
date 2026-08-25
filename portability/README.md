@@ -82,7 +82,7 @@ not pattern-matched off my examples.
 **The wrong neighbour, twice, on code I have never read.**
 
 Run 1 found `limit.remaining` versus `calls` — two counters, same
-vocabulary, and only one is read by the verdict at `index.js:103`. A reader
+vocabulary, and only one is read by the verdict at `index.js:108`. A reader
 watching the response header is watching the wrong number.
 
 Run 2 found that `syllable_threshold` carries three different live values
@@ -96,8 +96,8 @@ word "difficult" means.
 **Documentation drift in both territories' own docs.**
 
 Run 1: koajs's README lists `remaining`, `reset` and `total` as top-level
-options; the runtime reads them from `opts.headers` (`index.js:52-56`). The
-`status` option is implemented (`index.js:113`) and absent from the Options
+options; the runtime reads them from `opts.headers` (`index.js:54-58`). The
+`status` option is implemented (`index.js:119`) and absent from the Options
 list.
 
 Run 2: textstat's README says the library "requires at least 3 sentences for
@@ -149,7 +149,7 @@ standing and documented rather than papered over.
 ## One contradiction found and fixed
 
 Run 1 found that `rules.md:54` said "Every card carries both" — Hits and
-Does not hit — while `reference/card-types.md:69` said "`Hits` is replaced
+Does not hit — while `reference/card-types.md:78` said "`Hits` is replaced
 by `Proof of absence`" for ghost cards. Two of my four instruction files
 gave opposite instructions. Neither of my earlier cold walks caught it.
 `rules.md` now names the exception and points at `card-types.md`.
