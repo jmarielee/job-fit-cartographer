@@ -77,8 +77,10 @@ Every card names source file and line. No source text is pasted into a card.
 
 If a card and the source disagree, **the file wins and the card is wrong.**
 
-A card that could be reconstructed into the source is a photocopy. Cap:
-if a card is longer than the code it describes, cut it.
+A card that could be reconstructed into the source is a photocopy. The
+test is reconstruction, not length: a threshold card is necessarily longer
+than the one line it cites. Cut any card whose bulk is restated source
+rather than what a change to it hits.
 
 ## The catalog points, it does not hold
 
