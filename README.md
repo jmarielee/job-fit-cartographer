@@ -140,3 +140,6 @@ published whole, refusal included.
 
 The reasoning behind all three is in `EVIDENCE.md`. It is not required to
 walk the map.
+---
+
+© 2026 Jodi Paige-Lee / Interstitial Studios. All rights reserved.
